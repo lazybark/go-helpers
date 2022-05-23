@@ -91,3 +91,44 @@ func main() {
 	fmt.Println("And now it's:", gt)
 }
 ```
+### Text colors for console output
+Simple ANSI escape sequences to format CLI-output:
+```
+package main
+
+import (
+	"fmt"
+
+	"github.com/lazybark/go-helpers/cli/clf"
+)
+
+func main() {
+	fmt.Println("Let's make console pretty!")
+	fmt.Println(clf.Red("Red text"))
+	fmt.Println(clf.Green("Green text"))
+	fmt.Println(clf.Yellow("Yellow text"))
+	fmt.Println(clf.Blue("Blue text"))
+	fmt.Println(clf.Magenta("Magenta text"))
+	fmt.Println(clf.Cyan("Cyan text"))
+	fmt.Println(clf.Gray("Gray text"))
+	fmt.Println(clf.White("White text (ha-ha)"))
+	fmt.Println()
+	fmt.Println(clf.BBlack("Text with black background"))
+	fmt.Println(clf.BRed("Text with red background"))
+	fmt.Println(clf.BYellow("Text with yellow background"))
+	fmt.Println(clf.BBlue("Text with blue background"))
+	fmt.Println(clf.BMagenta("Text with magenta background"))
+	fmt.Println(clf.BCyan("Text with cyan background"))
+	fmt.Println(clf.BWhite("Text with white background"))
+	fmt.Println()
+	fmt.Println(clf.FBold("Text with bold formatting"))
+	fmt.Println(clf.FUnderline("Text with underline formatting"))
+	fmt.Println(clf.FBlink("Text with blinking formatting"))
+	fmt.Println()
+	fmt.Println(clf.Yellow(clf.BBlue("Text can " + clf.FReverse("be reversed") + clf.FUnReverse((" and dropped back, ")+"but both FReverse & FUnReverse need to have clf.Reset() at the end."+clf.Reset()))))
+	fmt.Println()
+	fmt.Println("Combining", clf.FBold(clf.BBlue("formats is even more fun!")))
+	fmt.Println()
+	fmt.Println("Manually", clf.BgMagenta.String()+"injected"+clf.Reset(), clf.CRed.String()+"formatting"+clf.Reset(), "also possible")
+}
+```
