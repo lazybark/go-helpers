@@ -133,4 +133,7 @@ func main() {
 }
 ```
 It's also possible to use `clf.FNone` as default in external methods that accept or pass on clf formatting directives.<br>
-It will return just an empty string.
+It will return just an empty string.<br>
+**WARNING**
+<br>
+Colors will not work in standart Windows console. To get colors on Windows (instead of weird ANSI) use [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/install) or any other app that supports ANSI escape codes.
