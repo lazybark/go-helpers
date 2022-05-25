@@ -132,3 +132,5 @@ func main() {
 	fmt.Println("Manually", clf.BgMagenta.String()+"injected"+clf.Reset(), clf.CRed.String()+"formatting"+clf.Reset(), "also possible")
 }
 ```
+It's also possible to use `clf.FNone` as default in external methods that accept or pass on clf formatting directives.<br>
+It will return just an empty string.
