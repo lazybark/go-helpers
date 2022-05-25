@@ -8,6 +8,8 @@ type Format int
 const (
 	formats_start Format = iota
 
+	//FNone exists for compatibility with any external methods that require clf formatting
+	FNone
 	FReset
 	CRed
 	CGreen
@@ -36,6 +38,7 @@ const (
 )
 
 var FormatStrings = [...]string{
+	"",
 	"\033[0m",
 	"\033[31m",
 	"\033[32m",
