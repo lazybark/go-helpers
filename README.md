@@ -137,3 +137,50 @@ It will return just an empty string.<br>
 **WARNING**
 <br>
 Colors will not work in standart Windows console. To get colors on Windows (instead of weird ANSI) use [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/install) or any other app that supports ANSI escape codes.
+
+### Logger
+
+LazyEvent - easy to use logger package that can be customized for almost any app. <br>
+Main features:
+* event-based logging
+* events are objects that can be stored and modified
+* events have levels and sources
+* loggers are objects accessed via one event processor
+* colored CLI output
+* in-memory events log, N last events are available at any time
+<br>
+Event logging is quite simple.
+Create new processor with desired number of events to keep in chain.
+
+```
+p := le.NewV1(8)
+```
+
+Add loggers for CLI or console: <br>
+
+```
+err := p.NewConsole()
+if err != nil {
+	log.Fatal(err)
+}
+err = p.NewFile("log.txt", true)
+if err != nil {
+	log.Fatal(err)
+}
+```
+You can use event sources that will be added in logs between event type and event text.<br>
+To add:
+
+```
+srcE := p.Source("EXTRA", "cyan", "[", "]")
+srcS := p.Source("SOMESTUFF", "red", "[", "]")
+```
+
+Events can be created in different ways:
+* from any event source (this source will be set as default)
+* from processor (all event parameters will be defaiult and source will be empty)
+* from event type (only type will be set, all rest - defaults)
+
+
+
+
