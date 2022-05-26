@@ -8,6 +8,23 @@ import (
 	"github.com/lazybark/go-helpers/cli/clf"
 )
 
+//GetText returns current text value
+func (e Event) GetText() string {
+	return e.text
+}
+
+//Text sets new text value for event
+func (e Event) Text(s string) Event {
+	e.text = s
+	return e
+}
+
+//Append adds string to event text
+func (e Event) Append(s string) Event {
+	e.text += s
+	return e
+}
+
 //Src sets different source for the event
 func (e Event) Src(s Evsource) Event {
 	e.source = s
