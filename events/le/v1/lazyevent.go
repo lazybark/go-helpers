@@ -66,9 +66,17 @@ var (
 	//EvsEmpty is an empty source to create log records with no sources
 	EvsEmpty = Evsource{}
 
-	//Debug is a default event source to mark debug messages
+	//EvsDebug is a default event source to mark debug messages
 	EvsDebug = Evsource{
 		Text:   "DEBUG",
+		Format: "",
+		Open:   "[",
+		Close:  "]",
+	}
+
+	//EvsMain represents main() function as an event source
+	EvsMain = Evsource{
+		Text:   "MAIN",
 		Format: "",
 		Open:   "[",
 		Close:  "]",
