@@ -87,6 +87,29 @@ func (s Evsource) Event(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TAll, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
 
+func (s Evsource) Info(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TInfo, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+func (s Evsource) Note(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TNote, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+func (s Evsource) Warning(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TWarning, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+func (s Evsource) Error(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TError, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+func (s Evsource) Panic(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TPanic, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+func (s Evsource) Critical(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TCritical, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+func (s Evsource) Fatal(p *EvProc, args ...interface{}) Event {
+	return p.newEvent(TFatal, s, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
 //Etype is the type of event to correctly treat it.
 type Etype uint8
 
