@@ -83,29 +83,50 @@ var (
 	}
 )
 
+//Event returns new Event instance with default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Event(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TAll, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
 
+//Info returns new Event instance with Info type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Info(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TInfo, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
 
+//Note returns new Event instance with Note type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Note(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TNote, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
+
+//Warning returns new Event instance with Warning type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Warning(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TWarning, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
+
+//Error returns new Event instance Error Error type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Error(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TError, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
+
+//Panic returns new Event instance with Panic type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Panic(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TPanic, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
+
+//Critical returns new Event instance with Critical type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Critical(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TCritical, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
+
+//Fatal returns new Event instance with Fatal type, default values and args serialized into string,
+//but source is set to s
 func (s Evsource) Fatal(p *EvProc, args ...interface{}) Event {
 	return p.newEvent(TFatal, s, fmt.Sprint(args...), all, false, clf.FNone)
 }
