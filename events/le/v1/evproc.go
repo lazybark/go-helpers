@@ -168,6 +168,36 @@ func (p *EvProc) Event(args ...interface{}) Event {
 }
 
 //Inf returns new Event instance with Info type, default values and args serialized into string
-func (p *EvProc) Inf(args ...interface{}) Event {
+func (p *EvProc) Info(args ...interface{}) Event {
 	return p.newEvent(TInfo, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance with Note type, default values and args serialized into string
+func (p *EvProc) Note(args ...interface{}) Event {
+	return p.newEvent(TNote, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance with Warning type, default values and args serialized into string
+func (p *EvProc) Warning(args ...interface{}) Event {
+	return p.newEvent(TWarning, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance Error Error type, default values and args serialized into string
+func (p *EvProc) Error(args ...interface{}) Event {
+	return p.newEvent(TError, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance with Panic type, default values and args serialized into string
+func (p *EvProc) Panic(args ...interface{}) Event {
+	return p.newEvent(TPanic, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance with Critical type, default values and args serialized into string
+func (p *EvProc) Critical(args ...interface{}) Event {
+	return p.newEvent(TCritical, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
+}
+
+//Inf returns new Event instance with Fatal type, default values and args serialized into string
+func (p *EvProc) Fatal(args ...interface{}) Event {
+	return p.newEvent(TFatal, EvsEmpty, fmt.Sprint(args...), all, false, clf.FNone)
 }
