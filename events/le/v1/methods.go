@@ -60,13 +60,13 @@ func (e Event) Log() {
 }
 
 //Inf sets event type to Info
-func (e Event) Inf() Event {
+func (e Event) Info() Event {
 	e.etype = TInfo
 	return e
 }
 
 //Err sets event type to Error
-func (e Event) Err() Event {
+func (e Event) Error() Event {
 	e.etype = TError
 	return e
 }
@@ -78,7 +78,7 @@ func (e Event) Note() Event {
 }
 
 //Warn sets event type to Warning
-func (e Event) Warn() Event {
+func (e Event) Warning() Event {
 	e.etype = TWarning
 	return e
 }
@@ -90,7 +90,7 @@ func (e Event) Panic() Event {
 }
 
 //Crit sets event type to critical
-func (e Event) Crit() Event {
+func (e Event) Critical() Event {
 	e.etype = TCritical
 	return e
 }
