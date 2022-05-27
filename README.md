@@ -12,14 +12,6 @@ The main problem of pointers is that GC could chase them in memory in some cases
 <br>
 Code examples and test mod [here](https://lazybark.dev/go-helpers/#npt).
 
-### Text colors for console output
-Simple ANSI escape sequences to format CLI-output.
-**WARNING**
-<br>
-Colors will not work in standart Windows console. To get colors on Windows (instead of weird ANSI) use [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/install) or any other app that supports ANSI escape codes.
-<br><br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#clf).
-
 ### Logger
 
 LazyEvent - easy to use logger package that can be customized for almost any app. <br>
@@ -69,6 +61,15 @@ Events can be created in different ways:
 Hasher for files, strings and byte slices. Hash types: MD5, SHA1, SHA256, SHA512<br>
 <br>
 Code examples and test mod [here](https://lazybark.dev/go-helpers/#hasher).
+
+### Text colors for console output
+
+Simple ANSI escape sequences to format CLI-output.
+**WARNING**
+<br>
+Colors will not work in standart Windows console. To get colors on Windows (instead of weird ANSI) use [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/install) or any other app that supports ANSI escape codes.
+<br><br>
+Code examples and test mod [here](https://lazybark.dev/go-helpers/#clf).
 
 ### Filesystem worker
 
