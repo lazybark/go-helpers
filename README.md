@@ -3,12 +3,6 @@ Simple lib to make life with Go easier. Due to large amount of code cases to sho
 
 ## What's inside
 
-### Hasher
-
-Hasher for files, strings and byte slices. Hash types: MD5, SHA1, SHA256, SHA512<br>
-<br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#hasher).
-
 
 ### No-pointer time
 
@@ -70,5 +64,21 @@ Events can be created in different ways:
 * from event type (only type will be set, all rest - defaults)
 
 
+### Hasher
+
+Hasher for files, strings and byte slices. Hash types: MD5, SHA1, SHA256, SHA512<br>
+<br>
+Code examples and test mod [here](https://lazybark.dev/go-helpers/#hasher).
+
+### Filesystem worker
+
+Right now fsw is just a simple method to create files along with all dirs in path. Will be more functions here later.<br>
+Second parameter, bool, will truncate the file in case true.<br>
+```
+f, err := fsw.MakePathToFile(path, true)
+if err != nil {
+    fmt.Println(err)
+}
+```
 
 
