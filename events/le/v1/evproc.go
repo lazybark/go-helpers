@@ -109,6 +109,10 @@ func (p *EvProc) log(e Event) {
 	p.ec <- e
 }
 
+func (p *EvProc) SetChainLength(n int) {
+	p.chainLength = n
+}
+
 //NewFile creates new logger to write into file and the file itself in case it does not exist.
 //NewFile will create all directories in specified path.
 func (p *EvProc) NewFile(path string, truncate bool, types ...Etype) error {
