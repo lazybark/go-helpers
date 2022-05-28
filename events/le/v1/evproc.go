@@ -100,12 +100,10 @@ func (p *EvProc) eventToChain(e Event) {
 //newEvent creates new Event and puts it to chain
 func (p *EvProc) newEvent(t Etype, s Evsource, text string, lt loggerType, ea bool, format clf.Format) Event {
 	e := Event{etype: t, source: s, time: npt.Now(), text: text, loggerType: lt, escapeAnsi: ea, format: format, proc: p}
-	if p.chainLength > 0 {
-		p.eventToChain(e)
-	}
 	return e
 }
 
+//log adds event to chain and passes to logger pool
 func (p *EvProc) log(e Event) {
 	p.eventToChain(e)
 	p.ec <- e
