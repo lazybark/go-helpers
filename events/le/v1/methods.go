@@ -5,6 +5,8 @@
 package v1
 
 import (
+	"time"
+
 	"github.com/lazybark/go-helpers/cli/clf"
 )
 
@@ -27,6 +29,17 @@ func (e *Event) TextSet(s string) {
 //Append adds string to event text
 func (e *Event) Append(s string) {
 	e.text += s
+}
+
+//Time sets different time for the event and returns new Event
+func (e Event) Time(t time.Time) Event {
+	e.time.FromTime(t)
+	return e
+}
+
+//Time sets different time for the event
+func (e *Event) TimeSet(t time.Time) {
+	e.time.FromTime(t)
 }
 
 //Src sets different source for the event and returns new Event
