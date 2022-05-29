@@ -20,14 +20,14 @@ type EvProc struct {
 	chainLength int
 	sourceLengh int
 	loggers     []*logger
-	evChain     []*chainEvent
+	evChain     []chainEvent
 	lcMutex     sync.Mutex
 	ec          chan (Event)
 }
 
 //New returns pointer no new EvProc
 func New(chainLength int) *EvProc {
-	p := &EvProc{delimeter: Delimeter, chainLength: chainLength, sourceLengh: len(EvsDebug.Text), loggers: make([]*logger, 0), evChain: make([]*chainEvent, 0), lcMutex: sync.Mutex{}, ec: make(chan Event, 10)}
+	p := &EvProc{delimeter: Delimeter, chainLength: chainLength, sourceLengh: len(EvsDebug.Text), loggers: make([]*logger, 0), evChain: make([]chainEvent, 0, chainLength), lcMutex: sync.Mutex{}, ec: make(chan Event, 10)}
 	go p.start()
 	return p
 }
@@ -93,7 +93,7 @@ func (p *EvProc) eventToChain(e Event) {
 		min = len - p.chainLength + 1
 		p.evChain = p.evChain[min:]
 	}
-	p.evChain = append(p.evChain, &chainEvent{etype: e.etype, source: e.source, time: e.time, text: e.text})
+	p.evChain = append(p.evChain, chainEvent{etype: e.etype, source: e.source, time: e.time, text: e.text})
 	p.lcMutex.Unlock()
 }
 
