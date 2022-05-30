@@ -41,6 +41,11 @@ Colors will not work in standart Windows console. To get colors on Windows (inst
 <br>
 Code examples and test mod [here](https://lazybark.dev/go-helpers/#clf).
 
+### Semver
+Semver is a simple package that provides tools to set and compare versions of anything in the world according to [Semantic versioning 2.0.0](https://semver.org/)
+<br>
+Code examples and test mod [here](https://lazybark.dev/go-helpers/#semver).
+
 ### Filesystem worker
 
 Right now fsw is just a simple method to create files along with all dirs in path. Will be more functions here later.<br>
