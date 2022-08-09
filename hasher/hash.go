@@ -26,8 +26,5 @@ func (t HashType) String() string {
 
 // CheckType returns false if t has illegal hash type
 func (t *HashType) CheckType() bool {
-	if hash_types_start < *t && *t < hash_types_end {
-		return true
-	}
-	return false
+	return hash_types_start < *t && *t < hash_types_end
 }
