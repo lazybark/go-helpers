@@ -187,10 +187,7 @@ func (l Etype) String() string {
 
 //Check returns false in case event type in unknown and should not be used
 func (t Etype) Check() bool {
-	if t <= e_types_start || t >= e_types_end {
-		return false
-	}
-	return true
+	return t <= e_types_start || t >= e_types_end
 }
 
 //IsErr returns true in case event type represents error. It can be used
