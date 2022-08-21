@@ -49,3 +49,7 @@ func (m *MockHTTPWriter) AssertAndFlush(t *testing.T, assertWith interface{}) {
 	assert.Equal(t, assertWith, string(*m.Data))
 	*m.Data = []byte{}
 }
+
+func (m *MockHTTPWriter) Flush() {
+	*m.Data = []byte{}
+}
