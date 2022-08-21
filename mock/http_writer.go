@@ -47,7 +47,7 @@ func (m MockHTTPWriter) WriteHeader(statusCode int) {
 // equals to given example and then cleans buffer.
 func (m *MockHTTPWriter) AssertAndFlush(t *testing.T, assertWith interface{}) {
 	assert.Equal(t, assertWith, string(*m.Data))
-	*m.Data = []byte{}
+	m.Flush()
 }
 
 func (m *MockHTTPWriter) Flush() {
