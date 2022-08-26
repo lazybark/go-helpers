@@ -1,7 +1,8 @@
-//LazyEvent v1 is a simple event log package that can work with files & CLI simultaneously.
-//It unifies event struct and helps in creating event log & event map for any app.
+// PACKAGE IS DEPRECATED: use github.com/lazybark/lazyevent instead
+// LazyEvent v1 is a simple event log package that can work with files & CLI simultaneously.
+// It unifies event struct and helps in creating event log & event map for any app.
 //
-//LE can prove useful in apps that require fast but easy-readable logging or event stacking.
+// LE can prove useful in apps that require fast but easy-readable logging or event stacking.
 package v1
 
 import (
@@ -11,7 +12,7 @@ import (
 	"github.com/lazybark/go-helpers/cli/clf"
 )
 
-//logger makes log records for events according to specified parameters
+// logger makes log records for events according to specified parameters
 type logger struct {
 	delimeter string
 	types     []Etype
@@ -19,7 +20,7 @@ type logger struct {
 	lt        loggerType
 }
 
-//loggerType represents basic logger type to control log info flow
+// loggerType represents basic logger type to control log info flow
 type loggerType uint8
 
 const (
@@ -33,7 +34,7 @@ const (
 	console
 )
 
-//log logs event according to its parameters
+// log logs event according to its parameters
 func (l *logger) log(e Event) error {
 	sc, sf := l.getSource(e.source)
 	if l.file != nil {
@@ -55,8 +56,8 @@ func (l *logger) log(e Event) error {
 	return nil
 }
 
-//getSource returns formatted source for logger. First return is source for CLI,
-//second is for file (will be different only in case ANSI-escapes were added)
+// getSource returns formatted source for logger. First return is source for CLI,
+// second is for file (will be different only in case ANSI-escapes were added)
 func (l *logger) getSource(source Evsource) (string, string) {
 	var s string
 	if source.Text != "" {
@@ -102,7 +103,7 @@ func (l *logger) getSource(source Evsource) (string, string) {
 	return s, s
 }
 
-//suits checks if logger has suitable type and matches event type
+// suits checks if logger has suitable type and matches event type
 func (l *logger) suits(et Etype, lt loggerType) bool {
 	for _, etype := range l.types {
 		if etype == TAll || etype == et {
