@@ -13,7 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("converted rows:", converted)
 
 	f, err := fsw.MakePathToFile("wiki.json", true)
 	if err != nil {
@@ -23,4 +22,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("converted rows:", converted)
 }
