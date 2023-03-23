@@ -1,4 +1,4 @@
-//fsw is a package with simple methods to work with filesystems.
+// fsw is a package with simple methods to work with filesystems.
 package fsw
 
 import (
@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 )
 
-//MakePathToFile creates full path to file in filesystem, creates the file and truncates
-//in case truncate = true.
+// MakePathToFile creates full path to file in filesystem, creates the file and truncates
+// in case truncate = true.
 //
-//Useful in cases where there is no need to check content (logs, for example).
+// Useful in cases where there is no need to check content (logs, for example).
 func MakePathToFile(path string, truncate bool) (*os.File, error) {
 	dir, _ := filepath.Split(path)
 	if dir == "" {
@@ -31,4 +31,16 @@ func MakePathToFile(path string, truncate bool) (*os.File, error) {
 	}
 
 	return f, nil
+}
+
+// CutBOMFromString returns string with byte order mark removed in case it exists at the start
+// of the string.
+//
+// Useful for reading UTF-8 files
+func CutBOMFromString(str string) string {
+	bom := []byte(str)
+	if bom[0] == 239 && bom[1] == 187 && bom[2] == 191 {
+		return string(bom[3:])
+	}
+	return str
 }
