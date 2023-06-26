@@ -100,7 +100,7 @@ func ConvertCSVFiletoMap(from string, divider string, cols ...string) ([]map[str
 
 	f, err := os.OpenFile(from, flags, 0666)
 	if err != nil {
-		return nil, 0, fmt.Errorf("[ConvertCSVFiletoJSON] can not open file: %w", err)
+		return nil, 0, fmt.Errorf("[ConvertCSVFiletoMap] can not open file: %w", err)
 	}
 
 	fileScanner := bufio.NewScanner(f)
