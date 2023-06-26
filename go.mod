@@ -3,6 +3,7 @@ module github.com/lazybark/go-helpers
 go 1.18
 
 require (
+	github.com/alexflint/go-arg v1.4.3
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/oauth2 v0.6.0
 	google.golang.org/api v0.114.0
@@ -11,6 +12,7 @@ require (
 require (
 	cloud.google.com/go/compute v1.18.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	github.com/alexflint/go-scalar v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
