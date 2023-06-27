@@ -62,7 +62,7 @@ func main() {
 		return
 	}
 	fmt.Printf("Found %d & %d strings in files 1 and 2\n", c.TotalRowsInFirstFile(), c.TotalRowsInSecondFile())
-	fmt.Printf("Different lines: %d\n", c.DeletedRowsCount())
+	fmt.Printf("Different lines: %d\n", c.DifferentRowsCount())
 	fmt.Printf("Same lines: %d\n", c.SameRowsCount())
 	fmt.Printf("Lines that not exist in second file: %d\n", c.DeletedRowsCount())
 
