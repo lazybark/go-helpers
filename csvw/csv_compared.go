@@ -13,13 +13,21 @@ type Compared struct {
 	Divider     string              //Divider can be manually changed if you need to see results with different one
 	keyCol      string              //Column to use as key
 	compareCols []string            //Columns to compare (should include keyCol!)
-	different   []map[string]string //All different lines
+	different   []Different         //All different lines
 	deleted     []map[string]string //All deleted lines
 	totalOne    int
 	totalTwo    int
 	diff        int
 	same        int
 	del         int
+	diffFields  map[string]int
+}
+
+// Different represents two different rows and list of fields that differ
+type Different struct {
+	Cols   map[string]string
+	RowOne map[string]string
+	RowTwo map[string]string
 }
 
 // WriteDeleted creates new .csv file with full list of rows that differ from first to second file
@@ -35,9 +43,11 @@ func (c *Compared) WriteDifferent(path string) error {
 	}
 	defer diffB.Close()
 
-	diffB.AddCell(c.keyCol)
-	for _, c := range c.compareCols {
-		diffB.AddCell(c)
+	for _, cc := range c.compareCols {
+		diffB.AddCell(cc)
+		if _, exist := c.diffFields[cc]; exist {
+			diffB.AddCell(cc + "_d")
+		}
 	}
 	diffB.NewLine()
 	_, err = diffB.WriteBuffer()
@@ -45,11 +55,34 @@ func (c *Compared) WriteDifferent(path string) error {
 		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
 	}
 
-	for _, l := range c.different {
-		for _, c := range c.compareCols {
-			diffB.AddCell(l[c])
+	for _, d := range c.different {
+		diffB.NewLine()
+
+		for _, cc := range c.compareCols {
+			diffB.AddCell(d.RowOne[cc])
+			if _, exist := c.diffFields[cc]; exist {
+				if dc, ok := d.Cols[cc]; ok {
+					diffB.AddCell(dc)
+				} else {
+					diffB.AddCell("")
+				}
+			}
 		}
 		diffB.NewLine()
+
+		for _, cc := range c.compareCols {
+			diffB.AddCell(d.RowTwo[cc])
+			if _, exist := c.diffFields[cc]; exist {
+				if dc, ok := d.Cols[cc]; ok {
+					diffB.AddCell(dc)
+				} else {
+					diffB.AddCell("")
+				}
+			}
+
+		}
+		diffB.NewLine()
+
 		_, err = diffB.WriteBuffer()
 		if err != nil {
 			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
@@ -97,7 +130,7 @@ func (c *Compared) WriteDeleted(path string) error {
 }
 
 // TotalRowsInSecondFile returns list of rows that differ (compared by ID)
-func (c *Compared) DifferentRows() []map[string]string {
+func (c *Compared) DifferentRows() []Different {
 	return c.different
 }
 
@@ -129,4 +162,9 @@ func (c *Compared) SameRowsCount() int {
 // DeletedRowsCount returns number of rows that exist in first document, but to in second
 func (c *Compared) DeletedRowsCount() int {
 	return c.del
+}
+
+// DeletedRowsCount returns number of rows that exist in first document, but to in second
+func (c *Compared) DifferentFieldsStat() map[string]int {
+	return c.diffFields
 }

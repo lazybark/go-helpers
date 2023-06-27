@@ -10,9 +10,9 @@ import (
 // column by column (compareCols) using keyCol as line primary ID.
 //
 // Generates a Compared struct that can write results if needed
-func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ...string) (c Compared, diffFields map[string]int, err error) {
+func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ...string) (c Compared, err error) {
 	var totalOne, totalTwo, diff, same, del int
-	diffFields = make(map[string]int)
+	var diffFields = make(map[string]int)
 	mapOne, _, err := conv.ConvertCSVFiletoMap(one, dividerOne, compareCols...)
 	if err != nil {
 		err = fmt.Errorf("[CompareCSVs] %s: %w", two, err)
@@ -29,7 +29,7 @@ func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ..
 
 	comp := make(map[string]map[string]string)
 	var deleted []map[string]string
-	var different []map[string]string
+	var different []Different
 
 	for _, c := range mapTwo {
 		comp[c[keyCol]] = make(map[string]string)
@@ -37,23 +37,25 @@ func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ..
 	}
 
 	var d bool
+	var dCols map[string]string
 	for _, c := range mapOne {
 		if _, ok := comp[c[keyCol]]; !ok {
 			del++
 			deleted = append(deleted, c)
 		} else {
 			d = false
+			dCols = make(map[string]string)
 			for _, col := range compareCols {
 				//There will be no fields that don't exist - ConvertCSVFiletoMap will make sure of that
 				if c[col] != comp[c[keyCol]][col] {
 					d = true
-					different = append(different, c)
-					different = append(different, comp[c[keyCol]])
 					diffFields[col]++
+					dCols[col] = "TRUE"
 				}
 			}
 			if d {
 				diff++
+				different = append(different, Different{Cols: dCols, RowOne: c, RowTwo: comp[c[keyCol]]})
 			} else {
 				same++
 			}
@@ -73,6 +75,7 @@ func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ..
 		diff:        diff,
 		same:        same,
 		del:         del,
+		diffFields:  diffFields,
 	}
 
 	return

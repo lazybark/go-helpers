@@ -18,20 +18,32 @@ func main() {
 
 	fmt.Println(clf.Green("Welcome to CSV comparing tool\n"))
 	if cfg.First == "" {
-		fmt.Printf("Provide path to first %s file. It will be used as initial set\n", clf.Red("(base)"))
+		fmt.Printf("Provide path to first %s file. It will be used as initial set. 1.csv if empty\n", clf.Red("(base)"))
 		cfg.First = cli.AwaitCLIcommand()
+		if cfg.First == "" {
+			cfg.First = "1.csv"
+		}
 	}
 	if cfg.SepOne == "" {
-		fmt.Printf("Separator symbol for the 1st file %s\n", clf.Red("(divides cells, e.g. ',' or ';')"))
+		fmt.Printf("Separator symbol for the 1st file %s. ';' if empty\n", clf.Red("(divides cells, e.g. ',' or ';')"))
 		cfg.SepOne = cli.AwaitCLIcommand()
+		if cfg.SepOne == "" {
+			cfg.SepOne = ";"
+		}
 	}
 	if cfg.Second == "" {
-		fmt.Println("Provide path to second file. It will be used as new set that needs to be compared")
+		fmt.Println("Provide path to second file. It will be used as new set that needs to be compared. 2.csv if empty")
 		cfg.Second = cli.AwaitCLIcommand()
+		if cfg.Second == "" {
+			cfg.Second = "2.csv"
+		}
 	}
 	if cfg.SepTwo == "" {
-		fmt.Printf("Separator symbol for the 2nd file %s\n", clf.Red("(divides cells, e.g. ',' or ';')"))
+		fmt.Printf("Separator symbol for the 2nd file %s ';' if empty\n", clf.Red("(divides cells, e.g. ',' or ';')"))
 		cfg.SepTwo = cli.AwaitCLIcommand()
+		if cfg.SepTwo == "" {
+			cfg.SepTwo = ";"
+		}
 	}
 	if cfg.KeyCol == "" {
 		fmt.Println("Enter name of the key column that will be used to identify rows between files.")
@@ -44,7 +56,7 @@ func main() {
 		cfg.ColsString = cli.AwaitCLIcommand()
 	}
 
-	c, diffFields, err := csvw.CompareCSVs(cfg.First, cfg.Second, cfg.SepOne, cfg.SepTwo, cfg.KeyCol, strings.Split(cfg.ColsString, ",")...)
+	c, err := csvw.CompareCSVs(cfg.First, cfg.Second, cfg.SepOne, cfg.SepTwo, cfg.KeyCol, strings.Split(cfg.ColsString, ",")...)
 	if err != nil {
 		fmt.Println(clf.Red("Error: ", err))
 		return
@@ -54,9 +66,10 @@ func main() {
 	fmt.Printf("Same lines: %d\n", c.SameRowsCount())
 	fmt.Printf("Lines that not exist in second file: %d\n", c.DeletedRowsCount())
 
-	if len(diffFields) > 0 {
+	df := c.DifferentFieldsStat()
+	if len(df) > 0 {
 		fmt.Println("\nBy fields:")
-		for n, i := range diffFields {
+		for n, i := range df {
 			fmt.Printf("%s: %d\n", n, i)
 		}
 	}
