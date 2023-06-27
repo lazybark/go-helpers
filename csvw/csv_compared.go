@@ -2,6 +2,7 @@ package csvw
 
 import (
 	"fmt"
+	"path/filepath"
 	"time"
 )
 
@@ -43,6 +44,7 @@ func (c *Compared) WriteDifferent(path string) error {
 	}
 	defer diffB.Close()
 
+	diffB.AddCell("doc")
 	for _, cc := range c.compareCols {
 		diffB.AddCell(cc)
 		if _, exist := c.diffFields[cc]; exist {
@@ -50,14 +52,17 @@ func (c *Compared) WriteDifferent(path string) error {
 		}
 	}
 	diffB.NewLine()
+
 	_, err = diffB.WriteBuffer()
 	if err != nil {
 		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
 	}
 
 	for _, d := range c.different {
+		diffB.AddCell("//")
 		diffB.NewLine()
 
+		diffB.AddCell(filepath.Base(c.one))
 		for _, cc := range c.compareCols {
 			diffB.AddCell(d.RowOne[cc])
 			if _, exist := c.diffFields[cc]; exist {
@@ -70,6 +75,7 @@ func (c *Compared) WriteDifferent(path string) error {
 		}
 		diffB.NewLine()
 
+		diffB.AddCell(filepath.Base(c.two))
 		for _, cc := range c.compareCols {
 			diffB.AddCell(d.RowTwo[cc])
 			if _, exist := c.diffFields[cc]; exist {
