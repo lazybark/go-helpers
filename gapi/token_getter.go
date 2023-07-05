@@ -3,6 +3,7 @@ package gapi
 
 import (
 	"context"
+	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -65,7 +66,13 @@ func saveToken(path string, token *oauth2.Token) {
 		log.Fatalf("Unable to cache oauth token: %v", err)
 	}
 	defer f.Close()
-	json.NewEncoder(f).Encode(token)
+
+	m, err := json.Marshal(token)
+	if err != nil {
+		log.Fatalf("Unable to cache oauth token: %v", err)
+	}
+
+	json.NewEncoder(f).Encode(b64.RawStdEncoding.EncodeToString(m))
 }
 
 // GetToken runs sequence to get auth token for any app for any scope.
