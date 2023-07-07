@@ -37,6 +37,16 @@ func (b *CSVBuilder) AddCell(str ...string) {
 	for _, s := range str {
 		b.Builder.WriteString(s + b.Separator)
 	}
+	return nil
+}
+
+// AddLine adds whole line to current buffer (with separator at the end)
+func (b *CSVBuilder) AddLine(str string) (err error) {
+	_, err = b.Builder.WriteString(str + b.Separator)
+	if err != nil {
+		return fmt.Errorf("[CSVBuilder][AddLine]: %w", err)
+	}
+	return nil
 }
 
 // NewLine adds line break to current string
@@ -87,4 +97,12 @@ func (b *CSVBuilder) WriteLineString(s string) (int, error) {
 	bts := []byte(s)
 	bts = append(bts, '\n')
 	return b.f.Write(bts)
+}
+func (b *CSVBuilder) WriteInto(w io.Writer) (int, error) {
+	n, err := w.Write([]byte(b.Builder.String()))
+	if err != nil {
+		return n, fmt.Errorf("[CSVBuilder][WriteInto]: %w", err)
+	}
+	b.Reset() //Always reset buffer before next write
+	return n, nil
 }
