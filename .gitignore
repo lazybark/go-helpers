@@ -2,3 +2,4 @@
 cmd/google-token/credentials.json
 cmd/google-token/token.json
 *.exe
+cmd/google-token/marshalled_token.json
