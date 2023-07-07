@@ -67,12 +67,20 @@ func saveToken(path string, token *oauth2.Token) {
 	}
 	defer f.Close()
 
+	json.NewEncoder(f).Encode(token)
+
+	fm, err := os.OpenFile("marshalled_"+path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
+	if err != nil {
+		log.Fatalf("Unable to cache oauth token: %v", err)
+	}
+	defer fm.Close()
+
 	m, err := json.Marshal(token)
 	if err != nil {
 		log.Fatalf("Unable to cache oauth token: %v", err)
 	}
 
-	json.NewEncoder(f).Encode(b64.RawStdEncoding.EncodeToString(m))
+	json.NewEncoder(fm).Encode(b64.RawStdEncoding.EncodeToString(m))
 }
 
 // GetToken runs sequence to get auth token for any app for any scope.
