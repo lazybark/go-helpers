@@ -2,6 +2,7 @@ package csvw
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // CSVBuilder uses strings.Builder to create CSV lines/cells one by one or in a batch.
-// Capable of writing right into file specified.
+// Capable of writing right into file specified or directly into any io.Writer interface
 type CSVBuilder struct {
 	Builder   *strings.Builder
 	Separator string
@@ -29,13 +30,19 @@ func (b *CSVBuilder) Close() error {
 // OpenFile open a file to write csv data into
 func (b *CSVBuilder) OpenFile(p string, truncate bool) (err error) {
 	b.f, err = fsw.MakePathToFile(p, truncate)
+	if err != nil {
+		return fmt.Errorf("[CSVBuilder][OpenFile]: %w", err)
+	}
 	return
 }
 
 // AddCell adds new cell to current string (with separator at the end)
-func (b *CSVBuilder) AddCell(str ...string) {
+func (b *CSVBuilder) AddCell(str ...string) (err error) {
 	for _, s := range str {
-		b.Builder.WriteString(s + b.Separator)
+		_, err = b.Builder.WriteString(s + b.Separator)
+		if err != nil {
+			return fmt.Errorf("[CSVBuilder][AddCell]: %w", err)
+		}
 	}
 	return nil
 }
@@ -50,8 +57,12 @@ func (b *CSVBuilder) AddLine(str string) (err error) {
 }
 
 // NewLine adds line break to current string
-func (b *CSVBuilder) NewLine() {
-	b.Builder.WriteString("\n")
+func (b *CSVBuilder) NewLine() (err error) {
+	_, err = b.Builder.WriteString("\n")
+	if err != nil {
+		return fmt.Errorf("[CSVBuilder][NewLine]: %w", err)
+	}
+	return nil
 }
 
 // Reset cleans current string
@@ -98,6 +109,8 @@ func (b *CSVBuilder) WriteLineString(s string) (int, error) {
 	bts = append(bts, '\n')
 	return b.f.Write(bts)
 }
+
+// WriteInto writes buffer into w and resets the buffer
 func (b *CSVBuilder) WriteInto(w io.Writer) (int, error) {
 	n, err := w.Write([]byte(b.Builder.String()))
 	if err != nil {
