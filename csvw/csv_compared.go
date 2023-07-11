@@ -122,6 +122,7 @@ func (c *Compared) WriteDeleted(path string) error {
 	}
 
 	for _, l := range c.deleted {
+		delB.AddCell(l[c.keyCol])
 		for _, c := range c.compareCols {
 			delB.AddCell(l[c])
 		}
