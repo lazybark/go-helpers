@@ -104,9 +104,11 @@ func Magenta(args ...interface{}) string {
 func Cyan(args ...interface{}) string {
 	return ansi(CCyan) + fmt.Sprint(args...) + ansi(FReset)
 }
+
 func Gray(args ...interface{}) string {
 	return ansi(CGray) + fmt.Sprint(args...) + ansi(FReset)
 }
+
 func White(args ...interface{}) string {
 	return ansi(CWhite) + fmt.Sprint(args...) + ansi(FReset)
 }
