@@ -40,3 +40,9 @@ type IFileWriter interface {
 	Write(b []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
 }
+
+// IFileReader is an interface to mock file reading operations
+type IFileReader interface {
+	Close() error
+	Read(b []byte) (n int, err error)
+}

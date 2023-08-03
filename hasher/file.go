@@ -2,14 +2,11 @@ package hasher
 
 import (
 	"bufio"
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"crypto/sha512"
 	"fmt"
-	"hash"
 	"io"
 	"os"
+
+	"github.com/lazybark/go-helpers/fsw"
 )
 
 // HashFilePath opens specified file and calls to HashFile
@@ -33,7 +30,7 @@ func HashFilePath(path string, ht HashType, bl int) (hashed string, err error) {
 // HashFile uses buffer with specified length to read and hash file as []byte
 //
 // bl is the number of bytes for HashFile to create reading buffer. If provided 0, it will be set for 1024 (1KB)
-func HashFile(file *os.File, ht HashType, bl int) (hashed string, err error) {
+func HashFile(file fsw.IFileReader, ht HashType, bl int) (hashed string, err error) {
 	r := bufio.NewReader(file)
 
 	var h hash.Hash
