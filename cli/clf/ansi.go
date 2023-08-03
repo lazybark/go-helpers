@@ -1,4 +1,4 @@
-//clf if a command line format package to add colors and styles to CLI-apps
+// clf if a command line format package to add colors and styles to CLI-apps
 package clf
 
 import "fmt"
@@ -68,6 +68,7 @@ func (c Format) String() string {
 	if c <= formats_start || c >= formats_end {
 		return ""
 	}
+
 	return FormatStrings[c-1]
 }
 
@@ -76,6 +77,7 @@ func ansi(c Format) string {
 	if c <= formats_start || c >= formats_end {
 		return ""
 	}
+
 	return FormatStrings[c-1]
 }
 
