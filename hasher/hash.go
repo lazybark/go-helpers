@@ -19,12 +19,12 @@ const (
 // String returns name for hash type or "illegal" if it is wrong
 func (t HashType) String() string {
 	if !t.CheckType() {
-		return "illegal"
+		return ""
 	}
-	return [...]string{"illegal", "MD5", "SHA1", "SHA256", "SHA512", "illegal"}[t]
+	return [...]string{"MD5", "SHA1", "SHA256", "SHA512"}[t-1]
 }
 
 // CheckType returns false if t has illegal hash type
-func (t *HashType) CheckType() bool {
-	return hash_types_start < *t && *t < hash_types_end
+func (t HashType) CheckType() bool {
+	return hash_types_start < t && t < hash_types_end
 }
