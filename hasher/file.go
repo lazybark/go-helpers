@@ -33,17 +33,7 @@ func HashFilePath(path string, ht HashType, bl int) (hashed string, err error) {
 func HashFile(file fsw.IFileReader, ht HashType, bl int) (hashed string, err error) {
 	r := bufio.NewReader(file)
 
-	var h hash.Hash
-
-	if ht == MD5 {
-		h = md5.New()
-	} else if ht == SHA1 {
-		h = sha1.New()
-	} else if ht == SHA256 {
-		h = sha256.New()
-	} else if ht == SHA512 {
-		h = sha512.New()
-	}
+	h := GetHasher(ht)
 
 	// Just use default
 	if bl == 0 {
