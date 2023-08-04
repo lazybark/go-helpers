@@ -38,3 +38,7 @@ func (l *MockFile) Read(b []byte) (n int, err error) {
 
 	return
 }
+
+func (l *MockFile) SetLastRead(n int) {
+	l.lastRead = n
+}
