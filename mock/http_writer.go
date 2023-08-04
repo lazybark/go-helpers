@@ -35,6 +35,7 @@ func (m MockHTTPWriter) Header() http.Header {
 // Write writes to mock's internal buffer
 func (m MockHTTPWriter) Write(b []byte) (int, error) {
 	*m.Data = append(*m.Data, b...)
+
 	return len(b), nil
 }
 

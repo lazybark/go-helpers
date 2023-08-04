@@ -10,10 +10,10 @@ import (
 
 func TestFileHashSameFile(t *testing.T) {
 	sameText := "This is some file here"
-	file := mock.MockFile{
+	file := mock.MockWriteReader{
 		Bytes: []byte(sameText),
 	}
-	file2 := mock.MockFile{
+	file2 := mock.MockWriteReader{
 		Bytes: []byte(sameText),
 	}
 

@@ -40,7 +40,7 @@ func TestCSVBuilderWriteBuffer(t *testing.T) {
 }
 
 func TestCSVBuilderWriteFile(t *testing.T) {
-	f := &mock.MockFile{}
+	f := &mock.MockWriteReader{}
 
 	sep := ";"
 	b := NewCSVBuilder(sep)

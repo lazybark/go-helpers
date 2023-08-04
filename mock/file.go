@@ -1,44 +1,26 @@
 package mock
 
-import "io"
-
+//MockFile implements os.File as interface
 type MockFile struct {
-	Bytes     []byte
-	lastRead  int
-	ReturnEOF bool //FIle will return EOF at once
+	MWR MockWriteReader
 }
 
-func (l *MockFile) Write(b []byte) (n int, err error) {
-	l.Bytes = append(l.Bytes, b...)
-
-	return 0, nil
+func (m *MockFile) Write(b []byte) (n int, err error) {
+	return m.MWR.Write(b)
 }
 
-func (l *MockFile) WriteString(s string) (n int, err error) {
-	return l.Write([]byte(s))
+func (m *MockFile) WriteString(s string) (n int, err error) {
+	return m.MWR.WriteString(s)
 }
 
-func (l *MockFile) Close() error {
-	return nil
+func (m *MockFile) Close() error {
+	return m.MWR.Close()
 }
 
-func (l *MockFile) Read(b []byte) (n int, err error) {
-	if l.ReturnEOF {
-
-		return n, io.EOF
-
-	} else {
-		n = copy(b, l.Bytes[l.lastRead:])
-		l.lastRead = l.lastRead + n
-	}
-
-	if l.lastRead >= len(l.Bytes) {
-		return n, io.EOF
-	}
-
-	return
+func (m *MockFile) Read(b []byte) (n int, err error) {
+	return m.MWR.Read(b)
 }
 
-func (l *MockFile) SetLastRead(n int) {
-	l.lastRead = n
+func (m *MockFile) SetLastRead(n int) {
+	m.MWR.SetLastRead(n)
 }

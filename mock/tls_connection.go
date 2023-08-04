@@ -1,18 +1,13 @@
 package mock
 
 import (
-	"io"
 	"net"
 	"time"
 )
 
 // MockTLSConnection mocks net.Conn interface
 type MockTLSConnection struct {
-	BytesToRead  []byte //Bytes will be returned, mocking network reading
-	lastRead     int    //Number of last byte that was read
-	WriteBytesTo []byte //Bytes will be written, mocking network write
-
-	ReturnEOF bool //ReturnEOF marks that Read() should return EOF
+	MWR MockWriteReader
 
 	AskedToBeClosed bool
 
@@ -21,27 +16,17 @@ type MockTLSConnection struct {
 }
 
 func (m *MockTLSConnection) Read(b []byte) (n int, err error) {
-	if m.ReturnEOF {
-		return 0, io.EOF
-	} else {
-		n = copy(b, m.BytesToRead[m.lastRead:])
-		m.lastRead = m.lastRead + n
-	}
-
-	return
+	return m.MWR.Read(b)
 }
 
-// Write replaces current buffer with b
 func (m *MockTLSConnection) Write(b []byte) (n int, err error) {
-	m.WriteBytesTo = b
-
-	return len(b), nil
+	return m.MWR.Write(b)
 }
 
 func (m *MockTLSConnection) Close() error {
 	m.AskedToBeClosed = true
 
-	return nil
+	return m.MWR.Close()
 }
 
 func (m *MockTLSConnection) LocalAddr() net.Addr                { return m.LocAddr }

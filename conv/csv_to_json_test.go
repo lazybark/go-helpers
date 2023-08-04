@@ -10,7 +10,7 @@ import (
 )
 
 func TestCSVToJSON(t *testing.T) {
-	file := &mock.MockFile{}
+	file := &mock.MockWriteReader{}
 
 	//Appending makes content more readable
 	//Head / cols
