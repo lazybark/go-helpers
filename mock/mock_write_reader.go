@@ -3,15 +3,16 @@ package mock
 import "io"
 
 type MockWriteReader struct {
-	Bytes     []byte
-	lastRead  int
-	ReturnEOF bool //FIle will return EOF at once
+	Bytes            []byte
+	lastRead         int
+	ReturnEOF        bool //FIle will return EOF at once
+	DontReturEOFEver bool
 }
 
 func (l *MockWriteReader) Write(b []byte) (n int, err error) {
 	l.Bytes = append(l.Bytes, b...)
 
-	return 0, nil
+	return len(b), nil
 }
 
 func (l *MockWriteReader) WriteString(s string) (n int, err error) {
@@ -32,7 +33,7 @@ func (l *MockWriteReader) Read(b []byte) (n int, err error) {
 		l.lastRead = l.lastRead + n
 	}
 
-	if l.lastRead >= len(l.Bytes) {
+	if l.lastRead >= len(l.Bytes) && !l.DontReturEOFEver {
 		return n, io.EOF
 	}
 
