@@ -1,10 +1,33 @@
 # go-helpers
-Simple lib to make life with Go easier. Due to large amount of code cases to show, examples and test modules have been moved to [my site](https://lazybark.dev).
+[![Test](https://github.com/lazybark/go-helpers/actions/workflows/test.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/test.yml)
+
+go-helpers is a small and simple lib which i use for my everyday projects. It has packages to make life easier with using same solution for similar small tasks.
+
+What's inside:
+* No-pointer time (npt)
+
 
 ## What's inside
 
 
 ### No-pointer time
+
+Perfect to use in loggers or other structs that just need to represent the second of some action.
+
+
+Important: to keep the package simpler and faster, NPT does not provide exact precision up to nano. Max precision is up to a second. It's enough for most tasks, but if your app depends on deeper precision - time.Time is your choice.
+
+Difference will look like that:
+```
+time.Time: 2023-08-03 19:33:13.0728246 +0000 UTC m=+0.005171401
+npt.NPT: 2023-08-03 19:33:13 +0000 UTC
+```
+
+In term of nanoseconds difference will be:
+```
+time.Time: 1691080393072824600
+npt.NPT: 1691080393000000000
+``
 
 NPT is a struct of two fields: seconds and nanoseconds which can recreate default Go time.Time struct by calling time.Unix(sec, nsec) <br>
 NPT holds no pointers (default time does - \*Location) and this makes NPT more memory-friendly due to reduced GC load. <br>
