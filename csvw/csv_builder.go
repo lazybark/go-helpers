@@ -3,7 +3,6 @@ package csvw
 import (
 	"fmt"
 	"io"
-	"os"
 	"strings"
 
 	"github.com/lazybark/go-helpers/fsw"
@@ -14,7 +13,7 @@ import (
 type CSVBuilder struct {
 	Builder   *strings.Builder
 	Separator string
-	f         *os.File
+	f         fsw.IFileWriter
 }
 
 // NewCSVBuilder returns new CSVBuilder with no file attached
@@ -34,6 +33,13 @@ func (b *CSVBuilder) OpenFile(p string, truncate bool) (err error) {
 		return fmt.Errorf("[CSVBuilder][OpenFile]: %w", err)
 	}
 	return
+}
+
+// UseFile sets internal file pointer to f. It will replace previous file.
+//
+// File can not be truncated
+func (b *CSVBuilder) UseFile(f fsw.IFileWriter) {
+	b.f = f
 }
 
 // AddCell adds new cell to current string (with separator at the end)
@@ -82,6 +88,7 @@ func (b *CSVBuilder) WriteBuffer() (int, error) {
 		return n, fmt.Errorf("[CSVBuilder][WriteBuffer]: %w", err)
 	}
 	b.Reset() //Always reset buffer before next write
+
 	return n, nil
 
 }
@@ -94,12 +101,14 @@ func (b *CSVBuilder) Write(bts []byte) (int, error) {
 // WriteString writes s directly into file (no line break at the end)
 func (b *CSVBuilder) WriteString(s string) (int, error) {
 	bts := []byte(s)
+
 	return b.f.Write(bts)
 }
 
 // WriteLine writes bytes directly into file and adds line break after last byte
 func (b *CSVBuilder) WriteLine(bts []byte) (int, error) {
 	bts = append(bts, '\n')
+
 	return b.f.Write(bts)
 }
 
@@ -107,6 +116,7 @@ func (b *CSVBuilder) WriteLine(bts []byte) (int, error) {
 func (b *CSVBuilder) WriteLineString(s string) (int, error) {
 	bts := []byte(s)
 	bts = append(bts, '\n')
+
 	return b.f.Write(bts)
 }
 
@@ -117,5 +127,6 @@ func (b *CSVBuilder) WriteInto(w io.Writer) (int, error) {
 		return n, fmt.Errorf("[CSVBuilder][WriteInto]: %w", err)
 	}
 	b.Reset() //Always reset buffer before next write
+
 	return n, nil
 }
