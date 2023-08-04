@@ -4,25 +4,27 @@ import (
 	"fmt"
 
 	"github.com/lazybark/go-helpers/conv"
+	"github.com/lazybark/go-helpers/fsw"
 )
 
 // CompareCSVs takes one as base csv dataset and two as changed dataset. Then compares
 // column by column (compareCols) using keyCol as line primary ID.
 //
 // Generates a Compared struct that can write results if needed
-func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ...string) (c Compared, err error) {
+func CompareCSVs(fOne, fTwo fsw.IFileReader, pathOne, pathTwo, dividerOne, dividerTwo, keyCol string, compareCols ...string) (c Compared, err error) {
 	var totalOne, totalTwo, diff, same, del int
 	var diffFields = make(map[string]int)
-	mapOne, _, err := conv.ConvertCSVFiletoMap(one, dividerOne, compareCols...)
+
+	mapOne, _, err := conv.ConvertCSVFiletoMap(fOne, dividerOne, compareCols...)
 	if err != nil {
-		err = fmt.Errorf("[CompareCSVs] %s: %w", two, err)
+		err = fmt.Errorf("[CompareCSVs] %s: %w", pathOne, err)
 		return
 	}
 	totalOne = len(mapOne)
 
-	mapTwo, _, err := conv.ConvertCSVFiletoMap(two, dividerTwo, compareCols...)
+	mapTwo, _, err := conv.ConvertCSVFiletoMap(fTwo, dividerTwo, compareCols...)
 	if err != nil {
-		err = fmt.Errorf("[CompareCSVs] %s: %w", two, err)
+		err = fmt.Errorf("[CompareCSVs] %s: %w", pathTwo, err)
 		return
 	}
 	totalTwo = len(mapTwo)
@@ -63,8 +65,8 @@ func CompareCSVs(one, two, dividerOne, dividerTwo, keyCol string, compareCols ..
 	}
 
 	c = Compared{
-		one:         one,
-		two:         two,
+		one:         pathOne,
+		two:         pathTwo,
 		Divider:     dividerOne,
 		keyCol:      keyCol,
 		compareCols: compareCols,

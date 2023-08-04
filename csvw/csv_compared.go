@@ -3,7 +3,8 @@ package csvw
 import (
 	"fmt"
 	"path/filepath"
-	"time"
+
+	"github.com/lazybark/go-helpers/fsw"
 )
 
 // Compared holds data of two compared csv files, including statistic. Methods WriteDeleted &
@@ -32,16 +33,9 @@ type Different struct {
 }
 
 // WriteDeleted creates new .csv file with full list of rows that differ from first to second file
-func (c *Compared) WriteDifferent(path string) error {
-	if path == "" {
-		path = fmt.Sprintf("%s_different_rows_%d.csv", c.one, time.Now().Unix())
-	}
-
+func (c *Compared) WriteDifferent(file fsw.IFileWriter) error {
 	diffB := NewCSVBuilder(c.Divider)
-	err := diffB.OpenFile(path, true)
-	if err != nil {
-		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
-	}
+	diffB.UseFile(file)
 	defer diffB.Close()
 
 	diffB.AddCell("doc")
@@ -53,7 +47,7 @@ func (c *Compared) WriteDifferent(path string) error {
 	}
 	diffB.NewLine()
 
-	_, err = diffB.WriteBuffer()
+	_, err := diffB.WriteBuffer()
 	if err != nil {
 		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
 	}
@@ -99,16 +93,9 @@ func (c *Compared) WriteDifferent(path string) error {
 }
 
 // WriteDeleted creates new .csv file with full list of deleted rows (exist in first file, but not in second)
-func (c *Compared) WriteDeleted(path string) error {
-	if path == "" {
-		path = fmt.Sprintf("%s_deleted_rows_%d.csv", c.one, time.Now().Unix())
-	}
-
+func (c *Compared) WriteDeleted(file fsw.IFileWriter) error {
 	delB := NewCSVBuilder(c.Divider)
-	err := delB.OpenFile(path, true)
-	if err != nil {
-		return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
-	}
+	delB.UseFile(file)
 	defer delB.Close()
 
 	delB.AddCell(c.keyCol)
@@ -116,7 +103,7 @@ func (c *Compared) WriteDeleted(path string) error {
 		delB.AddCell(c)
 	}
 	delB.NewLine()
-	_, err = delB.WriteBuffer()
+	_, err := delB.WriteBuffer()
 	if err != nil {
 		return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
 	}

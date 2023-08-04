@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
+	"time"
 
 	"github.com/lazybark/go-helpers/cli"
 	"github.com/lazybark/go-helpers/cli/clf"
 	"github.com/lazybark/go-helpers/csvw"
+	"github.com/lazybark/go-helpers/fsw"
 )
 
 func main() {
@@ -56,7 +59,18 @@ func main() {
 		cfg.ColsString = cli.AwaitCLIcommand()
 	}
 
-	c, err := csvw.CompareCSVs(cfg.First, cfg.Second, cfg.SepOne, cfg.SepTwo, cfg.KeyCol, strings.Split(cfg.ColsString, ",")...)
+	fOne, err := os.OpenFile(cfg.First, os.O_RDONLY, 0666)
+	if err != nil {
+		fmt.Println(clf.Red("Error: can not open file: %w", err))
+		return
+	}
+	fTwo, err := os.OpenFile(cfg.Second, os.O_RDONLY, 0666)
+	if err != nil {
+		fmt.Println(clf.Red("Error: can not open file: %w", err))
+		return
+	}
+
+	c, err := csvw.CompareCSVs(fOne, fTwo, cfg.First, cfg.Second, cfg.SepOne, cfg.SepTwo, cfg.KeyCol, strings.Split(cfg.ColsString, ",")...)
 	if err != nil {
 		fmt.Println(clf.Red("Error: ", err))
 		return
@@ -75,7 +89,16 @@ func main() {
 	}
 
 	if cfg.WriteDiffs {
-		err = c.WriteDifferent(cfg.DiffPath)
+		if cfg.DiffPath == "" {
+			cfg.DiffPath = fmt.Sprintf("%s_different_rows_%d.csv", cfg.First, time.Now().Unix())
+		}
+		df, err := fsw.MakePathToFile(cfg.DiffPath, true)
+		if err != nil {
+			fmt.Println(clf.Red("Error: ", err))
+			return
+		}
+
+		err = c.WriteDifferent(df)
 		if err != nil {
 			fmt.Println(clf.Red("Error: ", err))
 			return
@@ -86,7 +109,17 @@ func main() {
 		if wd == "y" || wd == "Y" {
 			fmt.Println("Path to new file. Leave empty to create new in the same directory. If file exists, it will be truncated")
 			p := cli.AwaitCLIcommand()
-			err = c.WriteDifferent(p)
+
+			if p == "" {
+				p = fmt.Sprintf("%s_different_rows_%d.csv", cfg.First, time.Now().Unix())
+			}
+			df, err := fsw.MakePathToFile(p, true)
+			if err != nil {
+				fmt.Println(clf.Red("Error: ", err))
+				return
+			}
+
+			err = c.WriteDifferent(df)
 			if err != nil {
 				fmt.Println(clf.Red("Error: ", err))
 				return
@@ -96,7 +129,16 @@ func main() {
 	}
 
 	if cfg.WriteDeleted {
-		err = c.WriteDeleted(cfg.DelPath)
+		if cfg.DiffPath == "" {
+			cfg.DiffPath = fmt.Sprintf("%s_deleted_rows_%d.csv", cfg.First, time.Now().Unix())
+		}
+		df, err := fsw.MakePathToFile(cfg.DiffPath, true)
+		if err != nil {
+			fmt.Println(clf.Red("Error: ", err))
+			return
+		}
+
+		err = c.WriteDeleted(df)
 		if err != nil {
 			fmt.Println(clf.Red("Error: ", err))
 			return
@@ -107,7 +149,17 @@ func main() {
 		if dd == "y" || dd == "Y" {
 			fmt.Println("Path to new file. Leave empty to create new in the same directory. If file exists, it will be truncated")
 			p := cli.AwaitCLIcommand()
-			err = c.WriteDeleted(p)
+
+			if p == "" {
+				p = fmt.Sprintf("%s_different_rows_%d.csv", cfg.First, time.Now().Unix())
+			}
+			df, err := fsw.MakePathToFile(p, true)
+			if err != nil {
+				fmt.Println(clf.Red("Error: ", err))
+				return
+			}
+
+			err = c.WriteDeleted(df)
 			if err != nil {
 				fmt.Println(clf.Red("Error: ", err))
 				return
