@@ -9,21 +9,19 @@ import (
 )
 
 func TestGenerateToken(t *testing.T) {
-	s, err := GenerateRandomString(1)
-	require.NoError(t, err)
-	assert.Equal(t, 1, len(s))
+	var s string
+	var last string
 
-	s, err = GenerateRandomString(2)
-	require.NoError(t, err)
-	assert.Equal(t, 2, len(s))
+	var err error
 
-	s, err = GenerateRandomString(17)
-	require.NoError(t, err)
-	assert.Equal(t, 17, len(s))
+	for i := 1; i < 500; i += 10 {
+		s, err = GenerateRandomString(i)
+		require.NoError(t, err)
+		assert.Equal(t, i, len(s))
+		assert.False(t, strings.ContainsAny(s, "%&*/\\|	=+ "))
+		assert.False(t, s == last)
 
-	s, err = GenerateRandomString(150)
-	require.NoError(t, err)
-	assert.Equal(t, 150, len(s))
+		last = s
+	}
 
-	assert.Equal(t, false, strings.ContainsAny(s, "%&*/\\|	=+ "))
 }
