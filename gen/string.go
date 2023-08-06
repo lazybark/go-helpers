@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-// GenerateRandomStringSet returns set of random strings of latin symbols and numbers.
+// GenerateRandomStringSet returns set of random strings of latin symbols and/or numbers.
 //
 // It is NOT crypto safe and is meant to be used in tests or non-sensitive operations only
 func GenerateRandomStringSet(lens []int) []string {
@@ -19,7 +19,7 @@ func GenerateRandomStringSet(lens []int) []string {
 	return ret
 }
 
-// GenerateRandomString returns a random string of latin symbols and numbers.
+// GenerateRandomString returns a random string of latin symbols and/or numbers.
 //
 // It is NOT crypto safe and is meant to be used in tests or non-sensitive operations only
 func GenerateRandomString(l int) string {
