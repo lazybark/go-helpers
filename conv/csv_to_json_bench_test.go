@@ -7,6 +7,8 @@ import (
 	"github.com/lazybark/go-helpers/mock"
 )
 
+var convertCSVFiletoJSONBenchmarkResult []byte
+
 func BenchmarkCSVToJSON(b *testing.B) {
 	file := &mock.MockWriteReader{}
 
@@ -25,7 +27,7 @@ func BenchmarkCSVToJSON(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		ConvertCSVFiletoJSON(file, csvDivider, csvColsBench...)
+		convertCSVFiletoJSONBenchmarkResult, _, _ = ConvertCSVFiletoJSON(file, csvDivider, csvColsBench...)
 	}
 
 }
