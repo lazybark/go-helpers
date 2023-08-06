@@ -16,8 +16,6 @@ func ConvertCSVFiletoJSON(f fsw.IFileReader, divider string, cols ...string) ([]
 		return nil, 0, fmt.Errorf("[ConvertCSVFiletoJSON]%w", err)
 	}
 
-	fmt.Println("ss")
-
 	bytes, err := json.Marshal(array)
 	if err != nil {
 		return nil, 0, fmt.Errorf("[ConvertCSVFiletoJSON] can not marshal map: %w", err)
