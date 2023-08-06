@@ -7,6 +7,8 @@ import (
 	"github.com/lazybark/go-helpers/mock"
 )
 
+var convertCSVFiletoMapBenchmarkResult []map[string]string
+
 func BenchmarkCSVToMap(b *testing.B) {
 	file := &mock.MockWriteReader{}
 
@@ -25,7 +27,7 @@ func BenchmarkCSVToMap(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		ConvertCSVFiletoMap(file, csvDivider, csvColsBench...)
+		convertCSVFiletoMapBenchmarkResult, _, _ = ConvertCSVFiletoMap(file, csvDivider, csvColsBench...)
 	}
 
 }
