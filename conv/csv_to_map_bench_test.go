@@ -7,8 +7,6 @@ import (
 	"github.com/lazybark/go-helpers/mock"
 )
 
-var csvColsBench = []string{"id", "name", "email", "some1", "some2", "some3", "some4", "some5", "some6", "some7"}
-
 func BenchmarkCSVToMap(b *testing.B) {
 	file := &mock.MockWriteReader{}
 
