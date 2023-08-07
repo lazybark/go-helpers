@@ -7,46 +7,55 @@ What's inside:
 * No-pointer time (npt)
 
 
-## What's inside
 
 
-### No-pointer time
 
-Perfect to use in loggers or other structs that just need to represent the second of some action.
+## No-pointer time
 
+NPT is a time-holding object that does not have timezone pointer (default time does - *Location). It's more memory-effective than default Go time.Time and can be used in apps that store time in memory only and do not serialize it. It can be a logger package that works with huge amount of events or an action buffer that doesn't need extra precision.
 
-Important: to keep the package simpler and faster, NPT does not provide exact precision up to nano. Max precision is up to a second. It's enough for most tasks, but if your app depends on deeper precision - time.Time is your choice.
+Absence of pointers makes NPT more memory-friendly due to reduced GC load. It's the only reason of NPT's existence.
 
-Difference will look like that:
+(The main problem of pointers is that GC could chase them in memory in some cases and if you have an app that stores lots of time records, it's performance may be reduced due to that effect. So, if you don't need location data and your app uses time only internally, you may want to replace it with NPT)
+
+Important: to keep the package simpler and faster, NPT does not provide exact precision up to nano. Max precision is up to a second. It's enough for most tasks, but if your app depends on deeper precision - time.Time is still your choice.
+
+Difference between outputs will look like that:
 ```
-time.Time: 2023-08-03 19:33:13.0728246 +0000 UTC m=+0.005171401
-npt.NPT: 2023-08-03 19:33:13 +0000 UTC
+time.Time: 2023-08-03 16:33:13.0728246 +0000 UTC m=+0.005171401
+npt.NPT: 2023-08-03 16:33:13 +0000 UTC
 ```
 
 In term of nanoseconds difference will be:
 ```
 time.Time: 1691080393072824600
 npt.NPT: 1691080393000000000
-``
+```
 
-NPT is a struct of two fields: seconds and nanoseconds which can recreate default Go time.Time struct by calling time.Unix(sec, nsec) <br>
-NPT holds no pointers (default time does - \*Location) and this makes NPT more memory-friendly due to reduced GC load. <br>
-The main problem of pointers is that GC could chase them in memory in some cases and if you have an app that stores lots of time records, it's performance may be reduced due to that effect. So, if you don't need location data and your app uses time only internally, you may want to replace it with NPT.<br>
-<br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#npt).
+### How to use NPT
 
-### Logger
-
-LazyEvent - easy to use logger package that can be customized for almost any app. <br>
-Main features:
-* event-based logging to CLI & file
-* events are objects that can be stored and modified
-* events have levels and sources
-* loggers are objects accessed via event processor
-* colored CLI output
-* in-memory events log, events are available at any time
-
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#lazy_event).
+Calling `Now()` will create a new NPT from current moment in time
+```
+t := npt.Now()
+fmt.Println("Now it's:", t.Time())
+```
+`ToNow()` will set internals of NPT to current moment
+`Time()` will return time.Time object from NPT internals
+```
+time.Sleep(2 * time.Second)
+t.ToNow()
+fmt.Println("Now it's:", t.Time())
+```
+`FromTime()` will set NPT to specified time value
+```
+t.FromTime(time.Now().Add(time.Hour))
+fmt.Println("And now it's:", t.Time())
+```
+`Add()` will add specified duration to NPT
+```
+t.Add(time.Hour)
+fmt.Println("And now it's:", t.Time())
+```
 
 
 ### Hasher
