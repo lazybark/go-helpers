@@ -5,7 +5,17 @@ go-helpers is a small and simple lib which i use for my everyday projects. It ha
 
 What's inside:
 * No-pointer time (npt)
-
+* Security
+* Generators (bytes, strings)
+* Mock
+* CSV worker
+* CSV comparer as CLI app
+* Google API helper
+* Converters
+* Hasher (bytes, strings, files)
+* CLI formatter
+* Semver
+* Filesystem worker
 
 
 
@@ -34,6 +44,8 @@ npt.NPT: 1691080393000000000
 
 ### How to use NPT
 
+Examples can be found in [cmd/npt-examples](https://github.com/lazybark/go-helpers/blob/main/cmd/npt-examples/npt.go)
+
 Calling `Now()` will create a new NPT from current moment in time
 ```
 t := npt.Now()
@@ -57,36 +69,29 @@ t.Add(time.Hour)
 fmt.Println("And now it's:", t.Time())
 ```
 
+## sec package
 
-### Hasher
+sec has functions to hash/compare passwords and generate cryptographically secure random strings using rand.Reader.
 
-Hasher for files, strings and byte slices. Hash types: MD5, SHA1, SHA256, SHA512<br>
-<br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#hasher).
+`HashAndSaltPasswordString(pwd string)` & `HashAndSaltPassword(pwd []byte)` will return password hash or error.
 
-### Text colors for console output
+`ComparePasswords(hashedPwd string, plainPwd string)` & `ComparePasswordBytes(byteHash []byte, plainPwdBytes []byte)` will return 'true' if password matches hash or error.
 
-Simple ANSI escape sequences to format CLI-output.
-**WARNING**
-<br>
-Colors will not work in standart Windows console. To get colors on Windows (instead of weird ANSI) use [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/install) or any other app that supports ANSI escape codes.
-<br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#clf).
+`GenerateRandomString(n int)` will return string of n length filled with random symbols from english alphabet and numbers. So it's non-extended ASCII printable characters only (excluding special symbols) and number of symbols in the string will be equal to it's length in bytes.
 
-### Semver
-Semver is a simple package that provides tools to set and compare versions of anything in the world according to [Semantic versioning 2.0.0](https://semver.org/)
-<br>
-Code examples and test mod [here](https://lazybark.dev/go-helpers/#semver).
+But if you need to use specific character set, you can call `GenerateRandomStringFromSet(n int, charSet []byte)` providing your own set of one of predefined in [gen/charaterSets.go](https://github.com/lazybark/go-helpers/blob/main/gen/charaterSets.go). But it's important to understand that some (most) languages use symbols that longer than 1 byte. So resulting string may not be readable by ~~pathetic biological creatures like us~~ humans.
 
-### Filesystem worker
+`åäö` - this string, for example, takes 6 bytes, not 3. So if you try to take random bytes from here, you will possibly get something like `�å`
 
-Right now fsw is just a simple method to create files along with all dirs in path. Will be more functions here later.<br>
-Second parameter, bool, will truncate the file in case true.<br>
-```
-f, err := fsw.MakePathToFile(path, true)
-if err != nil {
-    fmt.Println(err)
-}
-```
+Use tools [like this one](https://mothereff.in/byte-counter) to check 
 
+## gen package
 
+gen has methods to generate random strings & bytes that work the same way as in `sec` package above, but are not cryptographically secure. They share way of generating via rand.Reader, but no checks are made during the process. So result may be insecure.
+
+Rules same to `sec` package above apply to resulting data sets.
+
+* `GenerateRandomString(n int)` & `GenerateRandomBytes(n int)` uses english letters + digits
+* `GenerateRandomStringFromSet(n int, charSet []byte)` & `GenerateRandomBytesFromSet(n int, charSet []byte)` use any character set you provide
+* `GenerateRandomStringSet(lens []int)` & `GenerateRandomBytesSet(lens []int)` will provide a slice of random strings of english letters + digits
+* `GenerateRandomStringSetFromSet(lens []int, charSet []byte)` & `GenerateRandomBytesSetFromSet(lens []int, charSet []byte)` use any character set you provide
