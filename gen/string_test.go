@@ -19,4 +19,13 @@ func TestRandomString(t *testing.T) {
 
 		last = s
 	}
+
+	for i := 1; i < 500; i += 10 {
+		s = GenerateRandomStringFromSet(i, []byte(DigitsAndGerman))
+		assert.Equal(t, i, len(s))
+		assert.False(t, strings.ContainsAny(s, "%&*/\\|	=+ "))
+		assert.False(t, s == last)
+
+		last = s
+	}
 }

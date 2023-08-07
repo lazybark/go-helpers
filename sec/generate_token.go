@@ -4,31 +4,25 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
-	"math/big"
 
 	"github.com/lazybark/go-helpers/gen"
 )
 
+// GenerateRandomString uses digits and english letters to generate cryptographically secure random string
 func GenerateRandomString(n int) (string, error) {
+	return GenerateRandomStringFromSet(n, []byte(gen.DigitsAndEnglish))
+}
+
+// GenerateRandomStringFromSet uses provided set of characters to generate cryptographically secure random string
+func GenerateRandomStringFromSet(n int, charSet []byte) (string, error) {
+	//assertAvailablePRNG is what differs this generator from one in gen.
+	// We make check that it's ok to use rand.Reader right now
 	err := assertAvailablePRNG()
 	if err != nil {
 		return "", fmt.Errorf("[GenerateRandomString]%w", err)
 	}
 
-	return GenerateRandomStringFromSet(n, []byte(gen.DigitsAndEnglish))
-}
-
-func GenerateRandomStringFromSet(n int, charSet []byte) (string, error) {
-	ret := make([]byte, n)
-	for i := 0; i < n; i++ {
-		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(charSet))))
-		if err != nil {
-			return "", fmt.Errorf("[GenerateRandomString] %w", err)
-		}
-		ret[i] = charSet[num.Int64()]
-	}
-
-	return string(ret), nil
+	return string(gen.GenerateRandomBytesFromSet(n, charSet)), nil
 }
 
 func assertAvailablePRNG() error {
