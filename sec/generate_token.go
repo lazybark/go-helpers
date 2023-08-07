@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+
+	"github.com/lazybark/go-helpers/gen"
 )
 
 func GenerateRandomString(n int) (string, error) {
@@ -13,14 +15,17 @@ func GenerateRandomString(n int) (string, error) {
 		return "", fmt.Errorf("[GenerateRandomString]%w", err)
 	}
 
-	const symbols = `0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-`
+	return GenerateRandomStringFromSet(n, []byte(gen.DigitsAndEnglish))
+}
+
+func GenerateRandomStringFromSet(n int, charSet []byte) (string, error) {
 	ret := make([]byte, n)
 	for i := 0; i < n; i++ {
-		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(symbols))))
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(charSet))))
 		if err != nil {
 			return "", fmt.Errorf("[GenerateRandomString] %w", err)
 		}
-		ret[i] = symbols[num.Int64()]
+		ret[i] = charSet[num.Int64()]
 	}
 
 	return string(ret), nil
