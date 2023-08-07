@@ -8,8 +8,7 @@ import (
 // It's more memory-effective than default Go time.Time and can be used in apps that store time
 // in memory only and do not serialize it.
 //
-// For example: some action buffer that use time only for it's internal purposes of starting tasks
-// at specific moment.
+// For example: logger package that works with huge amount of events or action buffer that doesn't need extra precision.
 //
 // Important: NPT does not provide exact precision up to nano. Max precision is up to a second.
 type NPT struct {
