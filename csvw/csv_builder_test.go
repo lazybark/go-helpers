@@ -88,7 +88,4 @@ func TestCSVBuilderWriteFile(t *testing.T) {
 	require.NoError(t, err)
 	assert.Empty(t, b.String())                                                                       //Now buffer is empty
 	assert.Equal(t, cell1+sep+cell2+sep+cell3+cell3+cell4+"\n"+cell4+"\n"+cell5+sep, string(f.Bytes)) // And file is full
-	/*
-
-		WriteInto*/
 }
