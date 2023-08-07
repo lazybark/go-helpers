@@ -22,8 +22,6 @@ var (
 	csvCols2       = []string{"id", "name", "email", "extra"}
 	csvColsCompare = []string{"id", "name", "email"}
 
-	//deletedString1 = []string{"4", "user 4", "user4@gmail.com", "some4", "another3"}
-
 	csvLines1 = []testCSVString{
 		{
 			keyColValue:  "1",
