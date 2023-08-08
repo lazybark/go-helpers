@@ -200,6 +200,48 @@ Model Compared holds data of two compared csv files, including statistic. Method
 * `DeletedRowsCount() int` - number of rows that exist in first document, but not in second
 * `DifferentFieldsStat() map[string]int` - list of column names with number of how many rows have different value in each column
 
-Working example can found at [cmd/csv-comparer-examples.go](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer-examples).
+Working example can found at [cmd/csv-comparer-examples](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer-examples).
 
 Live command-line tool - at [cmd/csv-comparer](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer) (requires `go build`).
+
+## gapi
+
+gapi will one day be a useful helper to work with Google API, but right now it's just a couple of functions to get token from credentials & read from a GSheet.
+
+You can read about Golang implementation of Google Sheets API client at [Google's quickstart page](https://developers.google.com/sheets/api/quickstart/go).
+
+Right now you can use `GetTokenSheetsRead(scopes []string)` to create `token.json` file from `credentials.json` file via command-line and `ReadFromSheet(srv *sheets.Service, spreadsheetId string, readRange string) (*sheets.ValueRange, error)` to read from a sheet using token from previous function.
+
+Live command-line tool to get new token.json - at [cmd/google-token](https://github.com/lazybark/go-helpers/tree/main/cmd/google-token)
+
+## conv
+
+## hasher
+
+## cli/clf
+
+## semver
+
+semver is a simple package that provides tools to set and compare versions of anything in the world according to [Semantic versioning](https://semver.org/).
+
+type `Ver` has fields:
+
+* `Major uint`
+* `Minor uint`
+* `Patch uint`
+* `ReleaseNote string` - defines comment to release, e.g. "alpha", "beta.2"
+* `BuildMetadata string` - represents commit hash or any comment to current build
+* `Stable bool` - exportable field, but correct way to ckeck Stable is via `Ver.IsStable()`
+* `Comp []Ver` - holds list of versions that are totally compatible with current
+* `InComp []Ver` - holds list of versions that are totally incompatible with current
+
+And methods:
+* `String() string`
+* `IsStable() bool` - `false` is always returned in case v.Major is 0 or v.ReleaseNote is not empty. In all other cases real value of v.Stable is returned ([https://semver.org/#spec-item-9](https://semver.org/#spec-item-9), [https://semver.org/#spec-item-4](https://semver.org/#spec-item-4))
+* `IsHigher(c Ver) bool` - compares versions by rules of Semantic versioning
+* `IsEqual(c Ver) bool` - true in case versions are equal
+* `IsCompatible(c Ver) bool` - true in case versions should be compatible
+
+Examples are at [cmd/semver-examples](https://github.com/lazybark/go-helpers/tree/main/cmd/semver-examples)
+
+## fsw
