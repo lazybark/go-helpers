@@ -1,7 +1,7 @@
-//semver is a package that implements Semantic Versioning.
-//https://semver.org/
+// semver is a package that implements Semantic Versioning.
+// https://semver.org/
 //
-//It provides tools to set and compare versions.
+// It provides tools to set and compare versions.
 package semver
 
 import (
@@ -10,14 +10,14 @@ import (
 	"strings"
 )
 
-//SemVer represents Semantic Versioning document version
+// SemVer represents Semantic Versioning document version
 var SemVer = Ver{
 	Major: 2,
 	Minor: 0,
 	Patch: 0,
 }
 
-//Ver implements Semantic Versioning https://semver.org/
+// Ver implements Semantic Versioning https://semver.org/
 type Ver struct {
 	Major uint
 	Minor uint
@@ -40,7 +40,7 @@ type Ver struct {
 	InComp []Ver
 }
 
-//Stable returns true in case Ver is stable
+// String returns string-formatted semver
 func (v Ver) String() string {
 	rn := ""
 	if v.ReleaseNote != "" {
@@ -53,13 +53,13 @@ func (v Ver) String() string {
 	return fmt.Sprintf("%v.%v.%v%s%s", v.Major, v.Minor, v.Patch, rn, bm)
 }
 
-//IsStable returns true in case Ver is stable. False is always returned
-//in case v.Major is 0 or v.ReleaseNote is not empty. In all other cases
-//value of v.Stable is returned.
+// IsStable returns true in case Ver is stable. False is always returned
+// in case v.Major is 0 or v.ReleaseNote is not empty. In all other cases
+// value of v.Stable is returned.
 //
-//https://semver.org/#spec-item-9
+// https://semver.org/#spec-item-9
 //
-//https://semver.org/#spec-item-4
+// https://semver.org/#spec-item-4
 func (v Ver) IsStable() bool {
 	if v.Major == 0 {
 		return false
@@ -67,11 +67,12 @@ func (v Ver) IsStable() bool {
 	if v.ReleaseNote != "" {
 		return false
 	}
+
 	return v.Stable
 }
 
-//IsHigher compares versions by rules of Semantic versioning and returns
-//true in case v > c
+// IsHigher compares versions by rules of Semantic versioning and returns
+// true in case v > c
 func (v Ver) IsHigher(c Ver) bool {
 	//Compare major
 	if v.Major > c.Major {
@@ -134,7 +135,7 @@ func (v Ver) IsHigher(c Ver) bool {
 	return false
 }
 
-//IsEqual returns true in case versions are equal
+// IsEqual returns true in case versions are equal
 func (v Ver) IsEqual(c Ver) bool {
 	if v.IsHigher(c) {
 		return false
@@ -142,10 +143,11 @@ func (v Ver) IsEqual(c Ver) bool {
 	if c.IsHigher(v) {
 		return false
 	}
+
 	return true
 }
 
-//IsCompatible returns true in case API versions should be compatible.
+// IsCompatible returns true in case versions should be compatible
 func (v Ver) IsCompatible(c Ver) bool {
 	if v.IsEqual(c) {
 		return true
