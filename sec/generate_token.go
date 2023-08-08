@@ -15,8 +15,8 @@ func GenerateRandomString(n int) (string, error) {
 
 // GenerateRandomStringFromSet uses provided set of characters to generate cryptographically secure random string
 func GenerateRandomStringFromSet(n int, charSet []byte) (string, error) {
-	//assertAvailablePRNG is what differs this generator from one in gen.
-	// We make check that it's ok to use rand.Reader right now
+	// assertAvailablePRNG is what differs this generator from one in gen.
+	// We check that it's ok to use rand.Reader right now
 	err := assertAvailablePRNG()
 	if err != nil {
 		return "", fmt.Errorf("[GenerateRandomString]%w", err)

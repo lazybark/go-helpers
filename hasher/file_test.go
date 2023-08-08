@@ -9,12 +9,12 @@ import (
 )
 
 func TestFileHashSameFile(t *testing.T) {
-	sameText := "This is some file here"
+	someText := "This is some file here"
 	file := mock.MockWriteReader{
-		Bytes: []byte(sameText),
+		Bytes: []byte(someText),
 	}
 	file2 := mock.MockWriteReader{
-		Bytes: []byte(sameText),
+		Bytes: []byte(someText),
 	}
 
 	hash, err := HashFile(&file, MD5, 50)

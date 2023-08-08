@@ -1,6 +1,5 @@
 package mock
 
-//MockFile implements os.File as interface
 type MockFile struct {
 	MWR MockWriteReader
 }
