@@ -22,28 +22,28 @@ func main() {
 	fmt.Println(clf.Green("Welcome to CSV comparing tool\n"))
 	if cfg.First == "" {
 		fmt.Printf("Provide path to first %s file. It will be used as initial set. 1.csv if empty\n", clf.Red("(base)"))
-		cfg.First = cli.AwaitCLIcommand()
+		cfg.First = cli.AwaitStringInput()
 		if cfg.First == "" {
 			cfg.First = "1.csv"
 		}
 	}
 	if cfg.SepOne == "" {
 		fmt.Printf("Separator symbol for the 1st file %s. ';' if empty\n", clf.Red("(divides cells, e.g. ',' or ';')"))
-		cfg.SepOne = cli.AwaitCLIcommand()
+		cfg.SepOne = cli.AwaitStringInput()
 		if cfg.SepOne == "" {
 			cfg.SepOne = ";"
 		}
 	}
 	if cfg.Second == "" {
 		fmt.Println("Provide path to second file. It will be used as new set that needs to be compared. 2.csv if empty")
-		cfg.Second = cli.AwaitCLIcommand()
+		cfg.Second = cli.AwaitStringInput()
 		if cfg.Second == "" {
 			cfg.Second = "2.csv"
 		}
 	}
 	if cfg.SepTwo == "" {
 		fmt.Printf("Separator symbol for the 2nd file %s ';' if empty\n", clf.Red("(divides cells, e.g. ',' or ';')"))
-		cfg.SepTwo = cli.AwaitCLIcommand()
+		cfg.SepTwo = cli.AwaitStringInput()
 		if cfg.SepTwo == "" {
 			cfg.SepTwo = ";"
 		}
@@ -51,12 +51,12 @@ func main() {
 	if cfg.KeyCol == "" {
 		fmt.Println("Enter name of the key column that will be used to identify rows between files.")
 		fmt.Println("Wrong choice of not existing column will result in wrong output")
-		cfg.KeyCol = cli.AwaitCLIcommand()
+		cfg.KeyCol = cli.AwaitStringInput()
 	}
 	if cfg.ColsString == "" {
-		fmt.Println("Enter list of columns that need to be compared, divided by comma without space (", clf.Red("Including key column)"))
+		fmt.Printf("Enter list of columns that need to be compared, divided by comma without space %s\n", clf.Red("(Including key column)"))
 		fmt.Println("All columns should exist. Otherwise you can get unexpected results")
-		cfg.ColsString = cli.AwaitCLIcommand()
+		cfg.ColsString = cli.AwaitStringInput()
 	}
 
 	fOne, err := os.OpenFile(cfg.First, os.O_RDONLY, 0666)
@@ -105,10 +105,10 @@ func main() {
 		}
 	} else {
 		fmt.Println("Write differences to new CSV file? y/n")
-		wd := cli.AwaitCLIcommand()
+		wd := cli.AwaitStringInput()
 		if wd == "y" || wd == "Y" {
 			fmt.Println("Path to new file. Leave empty to create new in the same directory. If file exists, it will be truncated")
-			p := cli.AwaitCLIcommand()
+			p := cli.AwaitStringInput()
 
 			if p == "" {
 				p = fmt.Sprintf("%s_different_rows_%d.csv", cfg.First, time.Now().Unix())
@@ -145,10 +145,10 @@ func main() {
 		}
 	} else {
 		fmt.Println("Write deleted rows to new CSV file? y/n")
-		dd := cli.AwaitCLIcommand()
+		dd := cli.AwaitStringInput()
 		if dd == "y" || dd == "Y" {
 			fmt.Println("Path to new file. Leave empty to create new in the same directory. If file exists, it will be truncated")
-			p := cli.AwaitCLIcommand()
+			p := cli.AwaitStringInput()
 
 			if p == "" {
 				p = fmt.Sprintf("%s_different_rows_%d.csv", cfg.First, time.Now().Unix())

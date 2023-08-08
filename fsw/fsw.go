@@ -42,5 +42,6 @@ func CutBOMFromString(str string) string {
 	if bom[0] == 239 && bom[1] == 187 && bom[2] == 191 {
 		return string(bom[3:])
 	}
+
 	return str
 }

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// IFile represents file in the filesystem that's used to log events
+// IFile represents file in the filesystem
 type IFile interface {
 	Chdir() error
 	Chmod(mode fs.FileMode) error
