@@ -27,8 +27,8 @@ func (b *CSVBuilder) Close() error {
 }
 
 // OpenFile open a file to write csv data into
-func (b *CSVBuilder) OpenFile(p string, truncate bool) (err error) {
-	b.f, err = fsw.MakePathToFile(p, truncate)
+func (b *CSVBuilder) OpenFile(path string, truncate bool) (err error) {
+	b.f, err = fsw.MakePathToFile(path, truncate)
 	if err != nil {
 		return fmt.Errorf("[CSVBuilder][OpenFile]: %w", err)
 	}
@@ -59,6 +59,11 @@ func (b *CSVBuilder) AddLine(str string) (err error) {
 	if err != nil {
 		return fmt.Errorf("[CSVBuilder][AddLine]: %w", err)
 	}
+	err = b.NewLine()
+	if err != nil {
+		return fmt.Errorf("[CSVBuilder][AddLine]: %w", err)
+	}
+
 	return nil
 }
 

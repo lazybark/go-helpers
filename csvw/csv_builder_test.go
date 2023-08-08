@@ -31,8 +31,6 @@ func TestCSVBuilderWriteBuffer(t *testing.T) {
 	line := "some new;line;here"
 	err = b.AddLine(line)
 	require.NoError(t, err)
-	err = b.NewLine()
-	require.NoError(t, err)
 	assert.Equal(t, cell1+sep+cell2+sep+"\n"+line+sep+"\n", b.String())
 	//Clean buffer
 	b.Reset()
