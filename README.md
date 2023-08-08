@@ -4,18 +4,194 @@
 go-helpers is a small and simple lib which i use for my everyday projects. It has packages to make life easier with using same solution for similar small tasks.
 
 What's inside:
-* No-pointer time (npt)
-* Security (sec)
-* Generators (gen)
-* mock
-* CSV worker (csvw)
-* CSV comparer as CLI app (cmd/csv-comparer)
-* Google API helper (gapi)
-* Converters (conv)
-* Hasher (hasher)
-* CLI formatter (cli/clf)
-* Semantic version (semver)
-* Filesystem worker (fsw)
+* [CLI formatter (cli/clf)](https://github.com/lazybark/go-helpers/tree/main/cli)
+* [Converters (conv)](https://github.com/lazybark/go-helpers/tree/main/conv)
+* [CSV worker (csvw)](https://github.com/lazybark/go-helpers/tree/main/csvw)
+* [CSV comparer as CLI app (cmd/csv-comparer)](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer)
+* [Filesystem worker (fsw)](https://github.com/lazybark/go-helpers/tree/main/fsw)
+* [Google API helper (gapi)](https://github.com/lazybark/go-helpers/tree/main/gapi)
+* [Generators (gen)](https://github.com/lazybark/go-helpers/tree/main/gen)
+* [Hasher (hasher)](https://github.com/lazybark/go-helpers/tree/main/hasher)
+* [mock](https://github.com/lazybark/go-helpers/tree/main/mock)
+* [No-pointer time (npt)](https://github.com/lazybark/go-helpers/tree/main/npt)
+* [Security (sec)](https://github.com/lazybark/go-helpers/tree/main/sec)
+* [Semantic version (semver)](https://github.com/lazybark/go-helpers/tree/main/semver)
+
+## cli/clf
+
+### cli
+
+cli has functions to work with command-line interface. Currently:
+* `AwaitStringInput() string` - awaits for any text from user in os.Stdin
+* `AwaitStringInputNotEmpty() string` - awaits for text with len>0 from user in os.Stdin
+* `AwaitNumberInput() (int, error)` - awaits for user input and then tries to parse into number
+
+### clf
+
+clf if a command line format package to add colors and styles to CLI-apps. It has type Format with a number of constants representing ansi-formatting. There are lots of styles, so better to check in [cli/clf/ansi.go](https://github.com/lazybark/go-helpers/blob/main/cli/clf/ansi.go)
+
+## conv
+
+conv has functions to convert datatypes and sets.
+
+* `ConvertCSVFiletoMap(f fsw.IFileReader, divider string, cols ...string) ([]map[string]string, int, error)` - takes a file with csv formatting and returns slice of map[string]string (to convert only specific columns or in specific order, use a slice of column names as "cols")
+* `ConvertCSVFiletoJSON(f fsw.IFileReader, divider string, cols ...string) ([]byte, int, error)` - calls to `ConvertCSVFiletoMap()` and then to `json.Marshal()`
+
+## csvw package
+
+CSV worker is the package to perform operations over CSV files.
+
+### CSVBuilder
+
+CSVBuilder uses strings.Builder to create CSV strings and can write them to a file or mock struct. Use NewCSVBuilder(separator string) to create ready to use builder.
+
+Methods:
+
+* `OpenFile(path string, truncate bool) (err error)` - opens a file to APPEND
+* `UseFile(f fsw.IFileWriter)` - uses already opened file
+* `Close() error` - closes file that was opened by builder or set by
+* `AddCell(str ...string) (err error)` - adds new cell to current string (with separator at the end)
+* `AddLine(str string) (err error)` - adds whole line to current buffer (with separator and '\n' at the end)
+* `NewLine() (err error)` - adds line break to current string
+* `Reset()` - cleans current string
+* `String() string` - returns current string data
+* `WriteBuffer() (int, error)` - writes current byte buffer into opened file and cleans the buffer right after
+* `Write(bts []byte) (int, error)` - writes bytes directly into file (no line break at the end)
+* `WriteString(s string) (int, error)` - writes s directly into file (no line break at the end)
+* `WriteLine(bts []byte) (int, error)` - writes bytes directly into file and adds line break after last byte
+* `WriteLineString(s string) (int, error)` - writes s directly into file and adds line break after last byte
+* `WriteInto(w io.Writer) (int, error)`  - writes buffer into w and resets the buffer
+
+### CSV comparer
+
+Function CompareCSVs(fOne, fTwo fsw.IFileReader, pathOne, pathTwo, dividerOne, dividerTwo, keyCol string, compareCols ...string) takes fOne as base csv dataset and fTwo as changed dataset. Then compares column by column (compareCols) using keyCol as line primary ID. Generates a Compared struct that can write results into file if needed.
+
+Different is the model that holds data about exactly two rows that differ (compared by keyCol). RowOne with data from fOne and RowTwo from fTwo. Cols here stores list of columns that have different data.
+
+Model Compared holds data of two compared csv files, including statistic. Methods:
+
+* `WriteDifferent(file fsw.IFileWriter) error` - writes into file full list of rows that differ from first to second file
+* `WriteDeleted(file fsw.IFileWriter) error` - writes into file full list of deleted rows (that exist in first file, but not in second)
+* `DifferentRows() []Different` - returns list of rows that differ (compared by keyCol)
+* `DeletedRows() []map[string]string` - returns list of deleted rows (exist in first file, but not in second)
+* `TotalRowsInFirstFile() int` - number of rows in first file
+* `TotalRowsInSecondFile() int` - number of rows in second file
+* `DifferentRowsCount() int` - number of rows that differ from document to document, but have same keyCol value
+* `SameRowsCount() int` - number of rows that are same in both documents
+* `DeletedRowsCount() int` - number of rows that exist in first document, but not in second
+* `DifferentFieldsStat() map[string]int` - list of column names with number of how many rows have different value in each column
+
+Working example can found at [cmd/csv-comparer-examples](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer-examples).
+
+Live command-line tool - at [cmd/csv-comparer](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer) (requires `go build`).
+
+## fsw
+
+fsw is meant to store functions to work with filesystem. Right now it has just 2 functions:
+* `MakePathToFile(path string, truncate bool) (*os.File, error)` - creates full path to file in filesystem, creates the file and truncates in case truncate = true. Flags are `os.O_CREATE | os.O_APPEND` (you don't need to read at this point, right?)
+* `CutBOMFromString(str string) string` - returns string with byte order mark removed in case it exists at the start of the string (useful for reading UTF-8 files).
+
+Also fsw has some general file working interfaces:
+* `IFile` that has all the methods that `os.File` has
+* `IFileWriter` with just `Write`, `WriteString` & `Close`
+* `IFileReader` with just `Read` & `Close`
+
+(yes, i'm using I_notation for interfaces becasue find it more readable than conmon Go _er way of naming)
+
+## gapi
+
+gapi will one day be a useful helper to work with Google API, but right now it's just a couple of functions to get token from credentials & read from a GSheet.
+
+You can read about Golang implementation of Google Sheets API client at [Google's quickstart page](https://developers.google.com/sheets/api/quickstart/go).
+
+Right now you can use `GetTokenSheetsRead(scopes []string)` to create `token.json` file from `credentials.json` file via command-line and `ReadFromSheet(srv *sheets.Service, spreadsheetId string, readRange string) (*sheets.ValueRange, error)` to read from a sheet using token from previous function.
+
+Live command-line tool to get new token.json - at [cmd/google-token](https://github.com/lazybark/go-helpers/tree/main/cmd/google-token)
+
+## gen package
+
+gen has methods to generate random strings & bytes that work the same way as in `sec` package above, but are not cryptographically secure. They share way of generating via rand.Reader, but no checks are made during the process. So result may be insecure.
+
+Rules same to `sec` package above apply to resulting data sets.
+
+* `GenerateRandomString(n int)` & `GenerateRandomBytes(n int)` uses english letters + digits
+* `GenerateRandomStringFromSet(n int, charSet []byte)` & `GenerateRandomBytesFromSet(n int, charSet []byte)` use any character set you provide
+* `GenerateRandomStringSet(lens []int)` & `GenerateRandomBytesSet(lens []int)` will provide a slice of random strings of english letters + digits
+* `GenerateRandomStringSetFromSet(lens []int, charSet []byte)` & `GenerateRandomBytesSetFromSet(lens []int, charSet []byte)` use any character set you provide
+
+## hasher
+
+hasher has functions to hash strings, byte slices and files. Available HashTypes are: `MD5`, `SHA1`, `SHA256`, `SHA512`.
+
+Functions:
+* `GetHasher(ht HashType) hash.Hash` - returns hash.Hash interface from specific package according to ht
+* `HashString(s string, ht HashType) string`
+* `HashBytes(b []byte, ht HashType) string`
+* `HashFile(file fsw.IFileReader, ht HashType, bl int) (hashed string, err error)`
+* `HashFilePath(path string, ht HashType, bl int) (hashed string, err error)` - opens file to read and calls to `HashFile()`
+
+## mock package
+
+mock is a set of structs that implement specific interfaces and can be used in tests.
+
+### MockWriteReader
+
+MockWriteReader has methods to read/write into exported Bytes field. Field `ReturnEOF` will make `Read()` method to return `io.EOF` on any call. Field `DontReturEOFEver` will stop `Read()` from returnin `io.EOF` even if `Bytes` buffer was fully read.
+
+You can reuse same MockWriteReader to read by simply calling `SetLastRead(int)` - it will set internal last read byte number to the one provided.
+
+Full list of methods:
+
+* `Write(b []byte) (n int, err error)`
+* `WriteString(s string) (n int, err error)`
+* `Close() error`
+* `Read(b []byte) (n int, err error)`
+* `SetLastRead(n int)`
+
+Example declaration:
+
+```
+someText := "This is some file here"
+wreader := mock.MockWriteReader{
+  Bytes: []byte(someText),
+}
+```
+
+### MockFile
+
+MockFile uses MockWriteReader as `MWR` field to mock read/write operations.
+
+### MockHTTPWriter
+
+MockHTTPWriter is meant to implement `http.ResponseWriter` interface. It can be useful in various test cases with RESTful API methods that do not return any value to external function but write output directly to HTTP client.
+
+Methods:
+
+* `Header() http.Header` - returns `http.Header` in case it was set before or just nil map in other cases
+* `Write(b []byte) (int, error)` - adds to `Data` field
+* `WriteHeader(statusCode int)` - sets `StatusCode` field
+* `AssertAndFlush(t *testing.T, assertWith interface{})` - uses `assert.Equal()` to check if current buffer data equals to given example and then cleans Data field
+* `Flush()` - just cleans Data field
+
+### MockAddr
+
+MockAddr mocks `net.Addr`. Methods:
+
+* `Network() string`
+* `String() string`
+
+### MockTLSConnection
+
+MockTLSConnection implements `net.Conn` interface and uses MockWriteReader to mock connection read/write ops. Methods:
+
+* `Read(b []byte) (n int, err error)`
+* `Write(b []byte) (n int, err error)`
+* `Close() error` - sets AskedToBeClosed field to `true`
+* `LocalAddr() net.Addr` - returns LocAddr field
+* `RemoteAddr() net.Addr` - returns RemAddr field
+* `SetDeadline(t time.Time) error` - always nil
+* `SetReadDeadline(t time.Time) error` - always nil
+* `SetWriteDeadline(t time.Time) error` - always nil
 
 ## No-pointer time
 
@@ -82,144 +258,6 @@ But if you need to use specific character set, you can call `GenerateRandomStrin
 
 Use tools [like this one](https://mothereff.in/byte-counter) to check 
 
-## gen package
-
-gen has methods to generate random strings & bytes that work the same way as in `sec` package above, but are not cryptographically secure. They share way of generating via rand.Reader, but no checks are made during the process. So result may be insecure.
-
-Rules same to `sec` package above apply to resulting data sets.
-
-* `GenerateRandomString(n int)` & `GenerateRandomBytes(n int)` uses english letters + digits
-* `GenerateRandomStringFromSet(n int, charSet []byte)` & `GenerateRandomBytesFromSet(n int, charSet []byte)` use any character set you provide
-* `GenerateRandomStringSet(lens []int)` & `GenerateRandomBytesSet(lens []int)` will provide a slice of random strings of english letters + digits
-* `GenerateRandomStringSetFromSet(lens []int, charSet []byte)` & `GenerateRandomBytesSetFromSet(lens []int, charSet []byte)` use any character set you provide
-
-## mock package
-
-mock is a set of structs that implement specific interfaces and can be used in tests.
-
-### MockWriteReader
-
-MockWriteReader has methods to read/write into exported Bytes field. Field `ReturnEOF` will make `Read()` method to return `io.EOF` on any call. Field `DontReturEOFEver` will stop `Read()` from returnin `io.EOF` even if `Bytes` buffer was fully read.
-
-You can reuse same MockWriteReader to read by simply calling `SetLastRead(int)` - it will set internal last read byte number to the one provided.
-
-Full list of methods:
-
-* `Write(b []byte) (n int, err error)`
-* `WriteString(s string) (n int, err error)`
-* `Close() error`
-* `Read(b []byte) (n int, err error)`
-* `SetLastRead(n int)`
-
-Example declaration:
-
-```
-someText := "This is some file here"
-wreader := mock.MockWriteReader{
-  Bytes: []byte(someText),
-}
-```
-
-### MockFile
-
-MockFile uses MockWriteReader as `MWR` field to mock read/write operations.
-
-### MockHTTPWriter
-
-MockHTTPWriter is meant to implement `http.ResponseWriter` interface. It can be useful in various test cases with RESTful API methods that do not return any value to external function but write output directly to HTTP client.
-
-Methods:
-
-* `Header() http.Header` - returns `http.Header` in case it was set before or just nil map in other cases
-* `Write(b []byte) (int, error)` - adds to `Data` field
-* `WriteHeader(statusCode int)` - sets `StatusCode` field
-* `AssertAndFlush(t *testing.T, assertWith interface{})` - uses `assert.Equal()` to check if current buffer data equals to given example and then cleans Data field
-* `Flush()` - just cleans Data field
-
-### MockAddr
-
-MockAddr mocks `net.Addr`. Methods:
-
-* `Network() string`
-* `String() string`
-
-### MockTLSConnection
-
-MockTLSConnection implements `net.Conn` interface and uses MockWriteReader to mock connection read/write ops. Methods:
-
-* `Read(b []byte) (n int, err error)`
-* `Write(b []byte) (n int, err error)`
-* `Close() error` - sets AskedToBeClosed field to `true`
-* `LocalAddr() net.Addr` - returns LocAddr field
-* `RemoteAddr() net.Addr` - returns RemAddr field
-* `SetDeadline(t time.Time) error` - always nil
-* `SetReadDeadline(t time.Time) error` - always nil
-* `SetWriteDeadline(t time.Time) error` - always nil
-
-## csvw package
-
-CSV worker is the package to perform operations over CSV files.
-
-### CSVBuilder
-
-CSVBuilder uses strings.Builder to create CSV strings and can write them to a file or mock struct. Use NewCSVBuilder(separator string) to create ready to use builder.
-
-Methods:
-
-* `OpenFile(path string, truncate bool) (err error)` - opens a file to APPEND
-* `UseFile(f fsw.IFileWriter)` - uses already opened file
-* `Close() error` - closes file that was opened by builder or set by
-* `AddCell(str ...string) (err error)` - adds new cell to current string (with separator at the end)
-* `AddLine(str string) (err error)` - adds whole line to current buffer (with separator and '\n' at the end)
-* `NewLine() (err error)` - adds line break to current string
-* `Reset()` - cleans current string
-* `String() string` - returns current string data
-* `WriteBuffer() (int, error)` - writes current byte buffer into opened file and cleans the buffer right after
-* `Write(bts []byte) (int, error)` - writes bytes directly into file (no line break at the end)
-* `WriteString(s string) (int, error)` - writes s directly into file (no line break at the end)
-* `WriteLine(bts []byte) (int, error)` - writes bytes directly into file and adds line break after last byte
-* `WriteLineString(s string) (int, error)` - writes s directly into file and adds line break after last byte
-* `WriteInto(w io.Writer) (int, error)`  - writes buffer into w and resets the buffer
-
-### CSV comparer
-
-Function CompareCSVs(fOne, fTwo fsw.IFileReader, pathOne, pathTwo, dividerOne, dividerTwo, keyCol string, compareCols ...string) takes fOne as base csv dataset and fTwo as changed dataset. Then compares column by column (compareCols) using keyCol as line primary ID. Generates a Compared struct that can write results into file if needed.
-
-Different is the model that holds data about exactly two rows that differ (compared by keyCol). RowOne with data from fOne and RowTwo from fTwo. Cols here stores list of columns that have different data.
-
-Model Compared holds data of two compared csv files, including statistic. Methods:
-
-* `WriteDifferent(file fsw.IFileWriter) error` - writes into file full list of rows that differ from first to second file
-* `WriteDeleted(file fsw.IFileWriter) error` - writes into file full list of deleted rows (that exist in first file, but not in second)
-* `DifferentRows() []Different` - returns list of rows that differ (compared by keyCol)
-* `DeletedRows() []map[string]string` - returns list of deleted rows (exist in first file, but not in second)
-* `TotalRowsInFirstFile() int` - number of rows in first file
-* `TotalRowsInSecondFile() int` - number of rows in second file
-* `DifferentRowsCount() int` - number of rows that differ from document to document, but have same keyCol value
-* `SameRowsCount() int` - number of rows that are same in both documents
-* `DeletedRowsCount() int` - number of rows that exist in first document, but not in second
-* `DifferentFieldsStat() map[string]int` - list of column names with number of how many rows have different value in each column
-
-Working example can found at [cmd/csv-comparer-examples](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer-examples).
-
-Live command-line tool - at [cmd/csv-comparer](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer) (requires `go build`).
-
-## gapi
-
-gapi will one day be a useful helper to work with Google API, but right now it's just a couple of functions to get token from credentials & read from a GSheet.
-
-You can read about Golang implementation of Google Sheets API client at [Google's quickstart page](https://developers.google.com/sheets/api/quickstart/go).
-
-Right now you can use `GetTokenSheetsRead(scopes []string)` to create `token.json` file from `credentials.json` file via command-line and `ReadFromSheet(srv *sheets.Service, spreadsheetId string, readRange string) (*sheets.ValueRange, error)` to read from a sheet using token from previous function.
-
-Live command-line tool to get new token.json - at [cmd/google-token](https://github.com/lazybark/go-helpers/tree/main/cmd/google-token)
-
-## conv
-
-## hasher
-
-## cli/clf
-
 ## semver
 
 semver is a simple package that provides tools to set and compare versions of anything in the world according to [Semantic versioning](https://semver.org/).
@@ -243,5 +281,3 @@ And methods:
 * `IsCompatible(c Ver) bool` - true in case versions should be compatible
 
 Examples are at [cmd/semver-examples](https://github.com/lazybark/go-helpers/tree/main/cmd/semver-examples)
-
-## fsw
