@@ -5,9 +5,9 @@ go-helpers is a small and simple lib which i use for my everyday projects. It ha
 
 What's inside:
 * No-pointer time (npt)
-* Security
-* Generators (bytes, strings)
-* Mock
+* Security (sec)
+* Generators (gen)
+* mock
 * CSV worker
 * CSV comparer as CLI app
 * Google API helper
@@ -16,9 +16,6 @@ What's inside:
 * CLI formatter
 * Semver
 * Filesystem worker
-
-
-
 
 ## No-pointer time
 
@@ -95,3 +92,66 @@ Rules same to `sec` package above apply to resulting data sets.
 * `GenerateRandomStringFromSet(n int, charSet []byte)` & `GenerateRandomBytesFromSet(n int, charSet []byte)` use any character set you provide
 * `GenerateRandomStringSet(lens []int)` & `GenerateRandomBytesSet(lens []int)` will provide a slice of random strings of english letters + digits
 * `GenerateRandomStringSetFromSet(lens []int, charSet []byte)` & `GenerateRandomBytesSetFromSet(lens []int, charSet []byte)` use any character set you provide
+
+## mock package
+
+mock is a set of structs that implement specific interfaces and can be used in tests.
+
+### MockWriteReader
+
+MockWriteReader has methods to read/write into exported Bytes field. Field `ReturnEOF` will make `Read()` method to return `io.EOF` on any call. Field `DontReturEOFEver` will stop `Read()` from returnin `io.EOF` even if `Bytes` buffer was fully read.
+
+You can reuse same MockWriteReader to read by simply calling `SetLastRead(int)` - it will set internal last read byte number to the one provided.
+
+Full list of methods:
+
+* `Write(b []byte) (n int, err error)`
+* `WriteString(s string) (n int, err error)`
+* `Close() error`
+* `Read(b []byte) (n int, err error)`
+* `SetLastRead(n int)`
+
+Example declaration:
+
+```
+someText := "This is some file here"
+wreader := mock.MockWriteReader{
+  Bytes: []byte(someText),
+}
+```
+
+### MockFile
+
+MockFile uses MockWriteReader as `MWR` field to mock read/write operations.
+
+### MockHTTPWriter
+
+MockHTTPWriter is meant to implement `http.ResponseWriter` interface. It can be useful in various test cases with RESTful API methods that do not return any value to external function but write output directly to HTTP client.
+
+Methods:
+
+* `Header() http.Header` - returns `http.Header` in case it was set before or just nil map in other cases
+* `Write(b []byte) (int, error)` - adds to `Data` field
+* `WriteHeader(statusCode int)` - sets `StatusCode` field
+* `AssertAndFlush(t *testing.T, assertWith interface{})` - uses `assert.Equal()` to check if current buffer data equals to given example and then cleans Data field
+* `Flush()` - just cleans Data field
+
+### MockAddr
+
+MockAddr mocks `net.Addr`. Methods:
+
+* `Network() string`
+* `String() string`
+
+### MockTLSConnection
+
+MockTLSConnection implements `net.Conn` interface and uses MockWriteReader to mock connection read/write ops. Methods:
+
+* `Read(b []byte) (n int, err error)`
+* `Write(b []byte) (n int, err error)`
+* `Close() error` - sets AskedToBeClosed field to `true`
+* `LocalAddr() net.Addr` - returns LocAddr field
+* `RemoteAddr() net.Addr` - returns RemAddr field
+* `SetDeadline(t time.Time) error` - always nil
+* `SetReadDeadline(t time.Time) error` - always nil
+* `SetWriteDeadline(t time.Time) error` - always nil
