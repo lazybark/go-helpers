@@ -7,10 +7,10 @@ import (
 	"github.com/lazybark/go-helpers/fsw"
 )
 
-// CompareCSVs takes one as base csv dataset and two as changed dataset. Then compares
+// CompareCSVs takes fOne as base csv dataset and fTwo as changed dataset. Then compares
 // column by column (compareCols) using keyCol as line primary ID.
 //
-// Generates a Compared struct that can write results if needed
+// Generates a Compared struct that can write results into file if needed
 func CompareCSVs(fOne, fTwo fsw.IFileReader, pathOne, pathTwo, dividerOne, dividerTwo, keyCol string, compareCols ...string) (c Compared, err error) {
 	var totalOne, totalTwo, diff, same, del int
 	var diffFields = make(map[string]int)

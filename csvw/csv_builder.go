@@ -86,7 +86,7 @@ func (b *CSVBuilder) String() string {
 	return b.Builder.String()
 }
 
-// WriteBuffer writes current byte buffer into opened file and cleans the buffer right after.
+// WriteBuffer writes current byte buffer into opened file and cleans the buffer right after
 func (b *CSVBuilder) WriteBuffer() (int, error) {
 	n, err := b.f.Write([]byte(b.Builder.String()))
 	if err != nil {

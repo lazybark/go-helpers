@@ -32,7 +32,7 @@ type Different struct {
 	RowTwo map[string]string
 }
 
-// WriteDeleted creates new .csv file with full list of rows that differ from first to second file
+// WriteDeleted writes into file full list of rows that differ from first to second file
 func (c *Compared) WriteDifferent(file fsw.IFileWriter) error {
 	diffB := NewCSVBuilder(c.Divider)
 	diffB.UseFile(file)
@@ -92,7 +92,7 @@ func (c *Compared) WriteDifferent(file fsw.IFileWriter) error {
 	return nil
 }
 
-// WriteDeleted creates new .csv file with full list of deleted rows (exist in first file, but not in second)
+// WriteDeleted writes into file full list of deleted rows (that exist in first file, but not in second)
 func (c *Compared) WriteDeleted(file fsw.IFileWriter) error {
 	delB := NewCSVBuilder(c.Divider)
 	delB.UseFile(file)
@@ -148,17 +148,17 @@ func (c *Compared) DifferentRowsCount() int {
 	return c.diff
 }
 
-// SameRowsCount returns number of rows that exist in both documents
+// SameRowsCount returns number of rows that are same in both documents
 func (c *Compared) SameRowsCount() int {
 	return c.same
 }
 
-// DeletedRowsCount returns number of rows that exist in first document, but to in second
+// DeletedRowsCount returns number of rows that exist in first document, but not in second
 func (c *Compared) DeletedRowsCount() int {
 	return c.del
 }
 
-// DeletedRowsCount returns number of rows that exist in first document, but to in second
+// DifferentFieldsStat returns list of column names with number of how many rows have different value in each column
 func (c *Compared) DifferentFieldsStat() map[string]int {
 	return c.diffFields
 }
