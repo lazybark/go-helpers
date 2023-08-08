@@ -8,14 +8,14 @@ What's inside:
 * Security (sec)
 * Generators (gen)
 * mock
-* CSV worker
-* CSV comparer as CLI app
-* Google API helper
-* Converters
-* Hasher (bytes, strings, files)
-* CLI formatter
-* Semver
-* Filesystem worker
+* CSV worker (csvw)
+* CSV comparer as CLI app (cmd/csv-comparer)
+* Google API helper (gapi)
+* Converters (conv)
+* Hasher (hasher)
+* CLI formatter (cli/clf)
+* Semantic version (semver)
+* Filesystem worker (fsw)
 
 ## No-pointer time
 
@@ -155,3 +155,51 @@ MockTLSConnection implements `net.Conn` interface and uses MockWriteReader to mo
 * `SetDeadline(t time.Time) error` - always nil
 * `SetReadDeadline(t time.Time) error` - always nil
 * `SetWriteDeadline(t time.Time) error` - always nil
+
+## csvw package
+
+CSV worker is the package to perform operations over CSV files.
+
+### CSVBuilder
+
+CSVBuilder uses strings.Builder to create CSV strings and can write them to a file or mock struct. Use NewCSVBuilder(separator string) to create ready to use builder.
+
+Methods:
+
+* `OpenFile(path string, truncate bool) (err error)` - opens a file to APPEND
+* `UseFile(f fsw.IFileWriter)` - uses already opened file
+* `Close() error` - closes file that was opened by builder or set by
+* `AddCell(str ...string) (err error)` - adds new cell to current string (with separator at the end)
+* `AddLine(str string) (err error)` - adds whole line to current buffer (with separator and '\n' at the end)
+* `NewLine() (err error)` - adds line break to current string
+* `Reset()` - cleans current string
+* `String() string` - returns current string data
+* `WriteBuffer() (int, error)` - writes current byte buffer into opened file and cleans the buffer right after
+* `Write(bts []byte) (int, error)` - writes bytes directly into file (no line break at the end)
+* `WriteString(s string) (int, error)` - writes s directly into file (no line break at the end)
+* `WriteLine(bts []byte) (int, error)` - writes bytes directly into file and adds line break after last byte
+* `WriteLineString(s string) (int, error)` - writes s directly into file and adds line break after last byte
+* `WriteInto(w io.Writer) (int, error)`  - writes buffer into w and resets the buffer
+
+### CSV comparer
+
+Function CompareCSVs(fOne, fTwo fsw.IFileReader, pathOne, pathTwo, dividerOne, dividerTwo, keyCol string, compareCols ...string) takes fOne as base csv dataset and fTwo as changed dataset. Then compares column by column (compareCols) using keyCol as line primary ID. Generates a Compared struct that can write results into file if needed.
+
+Different is the model that holds data about exactly two rows that differ (compared by keyCol). RowOne with data from fOne and RowTwo from fTwo. Cols here stores list of columns that have different data.
+
+Model Compared holds data of two compared csv files, including statistic. Methods:
+
+* `WriteDifferent(file fsw.IFileWriter) error` - writes into file full list of rows that differ from first to second file
+* `WriteDeleted(file fsw.IFileWriter) error` - writes into file full list of deleted rows (that exist in first file, but not in second)
+* `DifferentRows() []Different` - returns list of rows that differ (compared by keyCol)
+* `DeletedRows() []map[string]string` - returns list of deleted rows (exist in first file, but not in second)
+* `TotalRowsInFirstFile() int` - number of rows in first file
+* `TotalRowsInSecondFile() int` - number of rows in second file
+* `DifferentRowsCount() int` - number of rows that differ from document to document, but have same keyCol value
+* `SameRowsCount() int` - number of rows that are same in both documents
+* `DeletedRowsCount() int` - number of rows that exist in first document, but not in second
+* `DifferentFieldsStat() map[string]int` - list of column names with number of how many rows have different value in each column
+
+Working example can found at [cmd/csv-comparer-examples.go](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer-examples).
+
+Live command-line tool - at [cmd/csv-comparer](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer) (requires `go build`).
