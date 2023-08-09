@@ -1,7 +1,7 @@
 # go-helpers
-![](https://img.shields.io/badge/license-MIT-blue)
-[![Test](https://github.com/lazybark/go-helpers/actions/workflows/test.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/test.yml)
 ![](https://img.shields.io/badge/golang-00ADD8?logo=go&amp;logoColor=white)
+[![Test](https://github.com/lazybark/go-helpers/actions/workflows/test.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/test.yml)
+![](https://img.shields.io/badge/license-MIT-blue)
 ![](https://img.shields.io/badge/Version-2.2.0-purple)
 ![GitHub last commit](https://img.shields.io/github/last-commit/lazybark/go-helpers)
 
