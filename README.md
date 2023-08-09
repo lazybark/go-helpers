@@ -1,5 +1,7 @@
 # go-helpers
 [![Test](https://github.com/lazybark/go-helpers/actions/workflows/test.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/test.yml)
+![](https://img.shields.io/badge/license-MIT-blue)
+![](https://img.shields.io/badge/golang-00ADD8?logo=go&amp;logoColor=white)
 
 go-helpers is a small and simple lib which i use for my everyday projects. It has packages to make life easier with using same solution for similar small tasks.
 
