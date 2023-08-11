@@ -9,17 +9,17 @@ go-helpers is a small and simple lib which i use for my everyday projects. It ha
 
 What's inside:
 * [CLI formatter](#cliclf) / in code: [(cli/clf)](https://github.com/lazybark/go-helpers/tree/main/cli)
-* [Converters (conv)](https://github.com/lazybark/go-helpers/tree/main/conv)
-* [CSV worker (csvw)](https://github.com/lazybark/go-helpers/tree/main/csvw)
-* [CSV comparer as CLI app (cmd/csv-comparer)](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer)
-* [Filesystem worker (fsw)](https://github.com/lazybark/go-helpers/tree/main/fsw)
-* [Google API helper (gapi)](https://github.com/lazybark/go-helpers/tree/main/gapi)
-* [Generators (gen)](https://github.com/lazybark/go-helpers/tree/main/gen)
-* [Hasher (hasher)](https://github.com/lazybark/go-helpers/tree/main/hasher)
-* [mock](https://github.com/lazybark/go-helpers/tree/main/mock)
-* [No-pointer time (npt)](https://github.com/lazybark/go-helpers/tree/main/npt)
-* [Security (sec)](https://github.com/lazybark/go-helpers/tree/main/sec)
-* [Semantic version (semver)](https://github.com/lazybark/go-helpers/tree/main/semver)
+* [Converters](#conv) / in code: [(conv)](https://github.com/lazybark/go-helpers/tree/main/conv)
+* [CSV worker](#csvw-package) / in code: [(csvw)](https://github.com/lazybark/go-helpers/tree/main/csvw)
+* [CSV comparer as CLI app]() / in code: [(cmd/csv-comparer)](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer)
+* [Filesystem worker](#fsw) / in code: [(fsw)](https://github.com/lazybark/go-helpers/tree/main/fsw)
+* [Google API helper](#gapi) / in code: [(gapi)](https://github.com/lazybark/go-helpers/tree/main/gapi)
+* [Generators](#gen-package) / in code: [(gen)](https://github.com/lazybark/go-helpers/tree/main/gen)
+* [Hasher](#hasher) / in code: [(hasher)](https://github.com/lazybark/go-helpers/tree/main/hasher)
+* [Mocer](#mock-package) / in code: [mock](https://github.com/lazybark/go-helpers/tree/main/mock)
+* [No-pointer time](#no-pointer-time) / in code: [(npt)](https://github.com/lazybark/go-helpers/tree/main/npt)
+* [Security](#sec-package) / in code: [(sec)](https://github.com/lazybark/go-helpers/tree/main/sec)
+* [Semantic version](#semver) / in code: [(semver)](https://github.com/lazybark/go-helpers/tree/main/semver)
 
 ## cli/clf
 
