@@ -205,7 +205,9 @@ Absence of pointers makes NPT more memory-friendly due to reduced GC load. It's 
 
 (The main problem of pointers is that GC could chase them in memory in some cases and if you have an app that stores lots of time records, it's performance may be reduced due to that effect. So, if you don't need location data and your app uses time only internally, you may want to replace it with NPT)
 
-Important: to keep the package simpler and faster, NPT does not provide exact precision up to nano. Max precision is up to a second. It's enough for most tasks, but if your app depends on deeper precision - time.Time is still your choice.
+Important: NPT gets time from `time.Time.Unix()`, so it's slower. `pprof` counts that calling to `npt.Now()` is generally about 25% slower than regular `time.Now()`. So using `npt` or not strictly depends on how much time entries you need or how much overall pointers your app will have in allocated memory. If you need millions of time entries or you already have such amount of other pointers, you may use `npt` to avoid overloading GC. If total number of in-memory time records is low, you don't really need `npt`.
+
+Important (2): to keep the package simpler and faster, NPT does not provide exact precision up to nano. Max precision is up to a second. It's enough for most tasks, but if your app depends on deeper precision - time.Time is still your choice.
 
 Difference between outputs will look like that:
 ```
