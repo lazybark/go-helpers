@@ -8,7 +8,7 @@
 go-helpers is a small and simple lib which i use for my everyday projects. It has packages to make life easier with using same solution for similar small tasks.
 
 What's inside:
-* [CLI formatter (cli/clf)](https://github.com/lazybark/go-helpers/tree/main/cli)
+* [CLI formatter](#cliclf) / in code: [(cli/clf)](https://github.com/lazybark/go-helpers/tree/main/cli)
 * [Converters (conv)](https://github.com/lazybark/go-helpers/tree/main/conv)
 * [CSV worker (csvw)](https://github.com/lazybark/go-helpers/tree/main/csvw)
 * [CSV comparer as CLI app (cmd/csv-comparer)](https://github.com/lazybark/go-helpers/tree/main/cmd/csv-comparer)
