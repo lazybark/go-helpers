@@ -16,7 +16,7 @@ What's inside:
 * [Google API helper](#gapi) / in code: [(gapi)](https://github.com/lazybark/go-helpers/tree/main/gapi)
 * [Generators](#gen-package) / in code: [(gen)](https://github.com/lazybark/go-helpers/tree/main/gen)
 * [Hasher](#hasher) / in code: [(hasher)](https://github.com/lazybark/go-helpers/tree/main/hasher)
-* [Mocer](#mock-package) / in code: [mock](https://github.com/lazybark/go-helpers/tree/main/mock)
+* [Mocker](#mock-package) / in code: [mock](https://github.com/lazybark/go-helpers/tree/main/mock)
 * [No-pointer time](#no-pointer-time) / in code: [(npt)](https://github.com/lazybark/go-helpers/tree/main/npt)
 * [Security](#sec-package) / in code: [(sec)](https://github.com/lazybark/go-helpers/tree/main/sec)
 * [Semantic version](#semver) / in code: [(semver)](https://github.com/lazybark/go-helpers/tree/main/semver)
