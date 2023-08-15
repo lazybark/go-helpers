@@ -38,50 +38,100 @@ func (c *Compared) WriteDifferent(file fsw.IFileWriter) error {
 	diffB.UseFile(file)
 	defer diffB.Close()
 
-	diffB.AddCell("doc")
+	err := diffB.AddCell("doc")
+	if err != nil {
+		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+	}
+
 	for _, cc := range c.compareCols {
-		diffB.AddCell(cc)
+		err = diffB.AddCell(cc)
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
+
 		if _, exist := c.diffFields[cc]; exist {
-			diffB.AddCell(cc + "_d")
+			err = diffB.AddCell(cc + "_d")
+			if err != nil {
+				return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+			}
 		}
 	}
-	diffB.NewLine()
+	err = diffB.NewLine()
+	if err != nil {
+		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+	}
 
-	_, err := diffB.WriteBuffer()
+	_, err = diffB.WriteBuffer()
 	if err != nil {
 		return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
 	}
 
 	for _, d := range c.different {
-		diffB.AddCell("//")
-		diffB.NewLine()
+		err = diffB.AddCell("//")
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
+		err = diffB.NewLine()
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
 
-		diffB.AddCell(filepath.Base(c.one))
+		err = diffB.AddCell(filepath.Base(c.one))
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
 		for _, cc := range c.compareCols {
-			diffB.AddCell(d.RowOne[cc])
+			err = diffB.AddCell(d.RowOne[cc])
+			if err != nil {
+				return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+			}
 			if _, exist := c.diffFields[cc]; exist {
 				if dc, ok := d.Cols[cc]; ok {
-					diffB.AddCell(dc)
+					err = diffB.AddCell(dc)
+					if err != nil {
+						return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+					}
 				} else {
-					diffB.AddCell("")
+					err = diffB.AddCell("")
+					if err != nil {
+						return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+					}
 				}
 			}
 		}
-		diffB.NewLine()
+		err = diffB.NewLine()
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
 
-		diffB.AddCell(filepath.Base(c.two))
+		err = diffB.AddCell(filepath.Base(c.two))
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
 		for _, cc := range c.compareCols {
-			diffB.AddCell(d.RowTwo[cc])
+			err = diffB.AddCell(d.RowTwo[cc])
+			if err != nil {
+				return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+			}
 			if _, exist := c.diffFields[cc]; exist {
 				if dc, ok := d.Cols[cc]; ok {
-					diffB.AddCell(dc)
+					err = diffB.AddCell(dc)
+					if err != nil {
+						return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+					}
 				} else {
-					diffB.AddCell("")
+					err = diffB.AddCell("")
+					if err != nil {
+						return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+					}
 				}
 			}
 
 		}
-		diffB.NewLine()
+		err = diffB.NewLine()
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDifferences]: %w", err)
+		}
 
 		_, err = diffB.WriteBuffer()
 		if err != nil {
@@ -98,22 +148,45 @@ func (c *Compared) WriteDeleted(file fsw.IFileWriter) error {
 	delB.UseFile(file)
 	defer delB.Close()
 
-	delB.AddCell(c.keyCol)
-	for _, c := range c.compareCols {
-		delB.AddCell(c)
+	err := delB.AddCell(c.keyCol)
+	if err != nil {
+		return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
 	}
-	delB.NewLine()
-	_, err := delB.WriteBuffer()
+
+	for _, c := range c.compareCols {
+		err = delB.AddCell(c)
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
+		}
+	}
+	err = delB.NewLine()
+	if err != nil {
+		return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
+	}
+
+	_, err = delB.WriteBuffer()
 	if err != nil {
 		return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
 	}
 
 	for _, l := range c.deleted {
-		delB.AddCell(l[c.keyCol])
-		for _, c := range c.compareCols {
-			delB.AddCell(l[c])
+		err = delB.AddCell(l[c.keyCol])
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
 		}
-		delB.NewLine()
+
+		for _, c := range c.compareCols {
+			err = delB.AddCell(l[c])
+			if err != nil {
+				return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
+			}
+		}
+
+		err = delB.NewLine()
+		if err != nil {
+			return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
+		}
+
 		_, err = delB.WriteBuffer()
 		if err != nil {
 			return fmt.Errorf("[CompareCSVs][WriteDeleted]: %w", err)
