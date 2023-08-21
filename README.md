@@ -2,8 +2,9 @@
 ![](https://img.shields.io/badge/golang-00ADD8?logo=go&amp;logoColor=white)
 [![Test](https://github.com/lazybark/go-helpers/actions/workflows/test.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/test.yml)
 [![golangci-lint](https://github.com/lazybark/go-helpers/actions/workflows/lint.yml/badge.svg)](https://github.com/lazybark/go-helpers/actions/workflows/lint.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lazybark/go-helpers)](https://goreportcard.com/report/github.com/lazybark/go-helpers)
 ![](https://img.shields.io/badge/license-MIT-blue)
-![](https://img.shields.io/badge/Version-2.2.0-purple)
+![](https://img.shields.io/badge/Version-1.8.0-purple)
 ![GitHub last commit](https://img.shields.io/github/last-commit/lazybark/go-helpers)
 
 go-helpers is a small and simple lib which i use for my everyday projects. It has packages to make life easier with using same solution for similar small tasks.
