@@ -6,23 +6,23 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashAndSaltPasswordString(pwd string) (string, error) {
-	return HashAndSaltPassword([]byte(pwd))
+func HashAndSaltPasswordString(pwd string, cost int) (string, error) {
+	return HashAndSaltPassword([]byte(pwd), cost)
 }
 
-func HashAndSaltPassword(pwd []byte) (string, error) {
+// HashAndSaltPassword returns password hash with provided cost (values between 4 & 31).
+func HashAndSaltPassword(pwd []byte, cost int) (string, error) {
+	if cost < bcrypt.MinCost {
+		cost = bcrypt.DefaultCost
+	}
 
-	// Use GenerateFromPassword to hash & salt pwd.
-	// MinCost is just an integer constant provided by the bcrypt
-	// package along with DefaultCost & MaxCost.
-	// The cost can be any value you want provided if it isn't lower
-	// than the MinCost (4)
-	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	// Use GenerateFromPassword to hash & salt the password.
+	//
+	// DefaultCost = 10, but can be set up to 31 (which is the max).
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.DefaultCost)
 	if err != nil {
 		return "", fmt.Errorf("[HashAndSaltPassword] %w", err)
 	}
-	// GenerateFromPassword returns a byte slice so we need to
-	// convert the bytes to a string and return it
 	return string(hash), err
 }
 

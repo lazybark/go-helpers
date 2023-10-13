@@ -10,7 +10,7 @@ import (
 func TestHashPasswordAndComparePasswordWithHash(t *testing.T) {
 	pwd := "some_password"
 	pwd2 := "some_password"
-	hash, err := HashAndSaltPasswordString(pwd)
+	hash, err := HashAndSaltPasswordString(pwd, 10)
 	require.NoError(t, err)
 
 	assert.Greater(t, len(hash), 0)
@@ -18,7 +18,7 @@ func TestHashPasswordAndComparePasswordWithHash(t *testing.T) {
 	assert.NotEqual(t, pwd, hash)
 
 	pwd3 := "some_password2"
-	hash3, err := HashAndSaltPasswordString(pwd3)
+	hash3, err := HashAndSaltPasswordString(pwd3, 10)
 	require.NoError(t, err)
 	assert.Greater(t, len(hash3), 0)
 	assert.Greater(t, len(hash3), len(pwd2))
